@@ -1,0 +1,122 @@
+# TASK: Fill the agent harness template with this project's real content
+
+`install.sh` has copied the owner's standard harness into this repository and written
+`HARNESS_INSTALL.md` (what was copied, what already existed, other agent files, notes). Your job is
+to turn the template into this project's harness. You are NOT implementing product features: do not
+change application code or behaviour (the only exception: formatting-only fixes, see step 6).
+
+Every place that needs project content is marked `{{FILL: …}}` (the text after the colon says
+what goes there). `make check` fails while any marker is left. Fill each one with real, verified
+content, or delete the line/section when it does not apply. Never leave generic template text.
+
+## 1. Discovery (read-only)
+
+- Stack, runtime versions, layout, entry points; how it is built, run, tested, linted, deployed.
+  Run each command you will list; record only what you ran, with its result.
+- The project language: the language of its UI, user docs and commit history. If unclear, ask.
+- Contracts with other systems: outputs, APIs, CLI commands, files that another project or service
+  reads. Look at how the code is called (CLI flags, HTTP routes, webhooks, exported formats) and at
+  sibling repos the owner mentions. These are the first hard rule.
+- Rules that already exist: `README`, docs, comments, commit bodies, and the files listed in
+  `HARNESS_INSTALL.md` («Already existed», «Other agent files»). Merge them; a rule you drop is
+  named in the report. An existing skill with the same name as a template one is replaced by the
+  filled template version, keeping its project-specific content (check it was not copied from
+  another project).
+- `HARNESS_INSTALL.md` «Notes»: act on each — especially `CASE:` (a directory spelled differently
+  only in case: use the project's spelling in every reference, or the check breaks on Linux/CI).
+- Where the code lives: a stack in a subdirectory (its own `go.mod`, `package.json`, `*.csproj`)
+  is not seen by the root-level auto-detection in the check script and hooks — add it explicitly.
+  A toolchain missing on this machine (e.g. .NET on macOS) is skipped with a message, never faked.
+- What must never be touched without a request: secrets, data directories, deploy targets, shared
+  libraries.
+- Past chats: only if the owner asks.
+
+## 2. Profile
+
+Full, unless all hold — then small: one deployable binary/package, roughly under 5k lines of own
+code, no web UI of its own, tasks usually fit one session. `install.sh --small` installs only the
+small subset; if you decide differently from what was installed, tell the owner and stop.
+
+Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, skills or subagents (they are
+added later with the same names); delete the review paragraph from `AGENTS.md` «Definition of done»
+and the `reviewer` from `CLAUDE.md`; keep `AGENTS.md` ~40–80 lines and delete sections that would be
+empty.
+
+## 3. Fill the files
+
+- `AGENTS.md` — summary, hard rules (contracts first, each incident/decision rule with `_Why:_`),
+  definition of done (the project's real layers), «Map» table, «Commands» (verified only),
+  commit language, profile. ≤ ~150 lines. Relative links only — never `file:///` or `/Users/…`.
+- `CLAUDE.md` — skills/agents/preview actually present.
+- `REVIEW.md` — «What to look for»: every hard rule of `AGENTS.md` that `make check` cannot see,
+  written as what it looks like in a diff (a rule a check enforces is not repeated), and the traps of
+  this stack (its database transactions, concurrency, calls to other systems); «What to ignore»
+  names the real formatters and linters. Keep the rest (scope, findings, two rounds) as it is.
+- `PROGRESS.md`, `docs/decisions.md`, `docs/plans/*` — in the project language, headings translated;
+  the first decision entry records the harness, others come from what you found (marked when only
+  from a chat or memory).
+- `scripts/check.sh` — keep the harness self-checks; check that the auto-detected stack sections fit
+  (Go/Node/Python switch on by marker files); add the project's own static and behaviour checks;
+  delete sections that cannot apply; translate the user-visible messages into the project language.
+- `.claude/hooks/stop-check.sh` — add quick checks keyed on changed paths (templates → their tests,
+  UI → UI unit tests, configs → validator); `.claude/hooks/format.sh` — add the project's formatter
+  if it is not there; `.claude/settings.json` — add allow/ask/deny rules for this project's safe and
+  dangerous commands and secret files.
+- Skills: fill `verify` (real layer-3 procedures) and `git-commit` (scope table from the directory
+  layout and `git log --format=%s | sort | uniq -c`, real examples). Add a project skill only for a
+  recurring task with rules not obvious from the code; symlink it into `.claude/skills/`.
+- Web UI: rename `.claude/agents/ui-verifier.md.example` to `<app>-verifier.md`, fill it, and create
+  `.claude/launch.json` from `launch.json.example` — the service on a throwaway database in an
+  ignored directory (`.tmp/`), a test admin seeded from env or fixtures, never real data. No UI:
+  delete both `.example` files.
+
+## 4. Module maps (full profile)
+
+For each module with non-obvious boundaries (cross-module contracts, security constraints, behaviour
+others rely on) create `<module>/AGENTS.md`, ≤ 50 lines, English:
+
+```markdown
+# <module> — module map
+
+Read before editing this module.
+
+## Responsibility
+## Contracts        (what other code or systems rely on)
+## Constraints (and why)
+## Pitfalls
+```
+
+No file or function lists, nothing repeated from the root. Check every claim against the code
+before writing it. Fewer accurate maps beat full coverage. Index them in the root «Map».
+
+## 5. Other tools
+
+Codex, Antigravity and Copilot read `AGENTS.md` and `.agents/skills/`. Other agent files found in
+`HARNESS_INSTALL.md`: move their rules into `AGENTS.md`; ask the owner whether to delete the old
+file or keep it as a one-line pointer to `AGENTS.md`.
+
+## 6. Make it green
+
+- `make check` must pass. Formatting-only fixes (gofmt, ruff format, prettier) are allowed; show
+  that the diff is whitespace-only (`git diff -w --stat` empty).
+- A linter with many old findings gets a baseline (golangci-lint `issues.new-from-rev: <HEAD before
+  the harness>`, or the tool's equivalent) and a tech-debt row «fix, then remove the baseline».
+- Failing tests or real bugs: do not fix them here — report them, record them in tech debt, and ask
+  the owner how to proceed. Never disable a check or weaken a test.
+
+## 7. Acceptance
+
+1. No `{{FILL` markers left; `make check` green.
+2. `.claude/` is tracked: `git check-ignore -v .claude/settings.json` prints nothing.
+3. Each hook run once by hand with sample input (`echo '{}' | bash .claude/hooks/stop-check.sh`,
+   and the commands from `.codex/hooks.json` from a subdirectory — Codex may start there;
+   `echo '{"tool_input":{"file_path":"<a source file>"}}' | sh .claude/hooks/format.sh`); the UI
+   preview (if any) started once and its login page loads.
+4. Cold start: from `AGENTS.md` and its links alone, a new agent can tell the current task, how to
+   verify it and what «done» means.
+5. Delete `HARNESS_INSTALL.md`.
+6. Report to the owner in their language: profile, files filled or merged, commands verified and
+   their results, rules merged or dropped, contracts found, what was not verified, open questions.
+7. Commit only when the owner asks, separately from other work: formatting-only fixes in their own
+   commit, then the harness (`chore(agents): …` in the project language). After the commit, run
+   `make check` on a fresh clone (`git clone . <tmp>`).

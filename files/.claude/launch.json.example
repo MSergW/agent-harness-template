@@ -1,0 +1,14 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "app-dev",
+      "runtimeExecutable": "sh",
+      "runtimeArgs": [
+        "-c",
+        "mkdir -p .tmp/app-dev && exec env PORT=18080 ADMIN_USER=devui ADMIN_PASSWORD=devui-local DB_PATH=.tmp/app-dev/app.db go run ./cmd/app"
+      ],
+      "port": 18080
+    }
+  ]
+}
