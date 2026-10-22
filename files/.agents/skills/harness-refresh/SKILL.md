@@ -39,7 +39,11 @@ never regenerate them. Human-facing files stay in the project language; agent-on
 ## 4. Rules from experience
 
 - Sources in the window: new `docs/decisions.md` entries, tech debt, audits, review findings in
-  commit bodies, the agent's feedback memory. Do not read chat transcripts wholesale.
+  commit bodies, the agent's feedback memory, and the agent sessions of the window (Claude Code:
+  `~/.claude/projects/<project path, non-alphanumerics → «-»>/*.jsonl`; Codex:
+  `~/.codex/sessions/**/*.jsonl` with a `cwd` inside the project) — the owner's corrections and
+  mistakes that repeated. Read sessions through `jq`/`rg` or subagents, never whole in the main
+  context; never copy secrets or personal data from them.
 - A mistake or correction that happened twice becomes a mechanical check in `scripts/check.sh` when
   it can be checked; otherwise one line in `AGENTS.md`, a module map or a skill.
 - `REVIEW.md` «What to look for» follows the hard rules: a new rule `make check` cannot see gets a

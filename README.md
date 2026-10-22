@@ -43,7 +43,10 @@ Requirements: `git`, `bash`, [`jq`](https://jqlang.org) (used by hooks), [`ripgr
    For a small project (one binary, under ~5k lines, no web UI) add `--small`.
 3. Open the project in your agent and give it the whole of [FILL_PROMPT.md](FILL_PROMPT.md). It
    replaces every `{{FILL: …}}` marker with real content from your code, merges rules from older
-   agent files, makes `make check` green and reports back.
+   agent files, makes `make check` green and reports back. It also reads your past Claude Code and
+   Codex sessions on this project: your corrections and the agent's repeated mistakes become rules
+   and checks, decisions made in a chat go to `docs/decisions.md` (secrets from transcripts are never
+   copied).
 4. Read the report, then ask the agent to commit.
 
 While a single `{{FILL` marker is left, `make check` is red, so a half-filled harness cannot slip
