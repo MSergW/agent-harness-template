@@ -19,6 +19,10 @@ decisions. Small tasks from a conversation need no plan.
 **Goal:** what the user gets.
 **Scope:** what is in / deliberately out.
 
+## Depth
+The `depth` skill's answers: what a top specialist would do beyond the request (and what was taken), the raw
+material it starts from, the methods, what beyond the usual checks verifies it.
+
 ## Decisions
 - <date> — what was decided and why (later moved to docs/decisions.md).
 

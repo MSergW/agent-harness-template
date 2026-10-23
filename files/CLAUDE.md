@@ -10,8 +10,9 @@
   - Codex runs the same scripts through `.codex/hooks.json` (session start, `rg` instead of `grep`,
     the check before finishing) — except the formatter: Codex edits through `apply_patch`, whose
     input has no `file_path`, so formatting there is left to the check before finishing.
-- Skills (`.claude/skills/` → symlinks to `.agents/skills/`): `verify`, `handoff`, `git-commit`
-  and `harness-refresh` (the last two only on explicit request){{FILL: , project skills}}.
+- Skills (`.claude/skills/` → symlinks to `.agents/skills/`): `verify`, `handoff`, `depth` (four
+  questions before a big task), `git-commit` and `harness-refresh` (the last two only on explicit
+  request){{FILL: , project skills}}.
 - Agents (`.claude/agents/`, none of them edits, commits or pushes): `checker` (haiku; runs
   `make check`, returns GREEN or the failure verbatim — prefer it over running the check in the main
   conversation), `log-reader` (haiku; root cause from long output), `docs-sync` (sonnet; stale docs

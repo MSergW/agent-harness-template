@@ -19,6 +19,7 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 1. `git status`, `git log --oneline -5`. Uncommitted changes you did not make belong to the owner.
 2. Read `PROGRESS.md` (current state, in progress, next).
 3. For multi-step work, open the active plan in `docs/plans/`.
+   Before a new plan or a feature across several modules, run the `depth` skill (four questions).
 4. Before changing code run `make check`. If the baseline is red, tell the owner and fix it first
    (with their consent) instead of stacking new work on top.
 
