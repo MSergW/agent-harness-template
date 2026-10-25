@@ -70,7 +70,7 @@ small subset; if you decide differently from what was installed, tell the owner 
 
 Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, skills or subagents (they are
 added later with the same names); delete the review paragraph from `AGENTS.md` «Definition of done»
-and the `depth` line from its «Session start», the `reviewer` and `depth` from `CLAUDE.md`; keep `AGENTS.md` ~40–80 lines and delete sections that would be
+and the `depth` line from its «Session start», the `reviewer` and `depth` from `CLAUDE.md` and its «Token efficiency & delegation» block; keep `AGENTS.md` ~40–80 lines and delete sections that would be
 empty.
 
 ## 4. Fill the files

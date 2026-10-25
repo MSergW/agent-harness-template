@@ -78,7 +78,7 @@ through.
 | `docs/plans/` | multi-session plans, tech debt, ideas |
 | `scripts/check.sh` | the single check behind `make check`: harness self-checks, Go/Node/Python by marker files, the project's own checks |
 | `.agents/skills/` | skills: `verify`, `handoff`, `depth` (four questions before a big task), `git-commit`, `harness-refresh` |
-| `.claude/` | hooks (session state, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, an example UI verifier) |
+| `.claude/` | hooks (session state, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, an example UI verifier) |
 | `.codex/hooks.json` | the same hooks for Codex (without the formatter: `apply_patch` has no `file_path`). Codex runs project hooks only after you trust them: `/hooks` in the CLI |
 
 A small project gets only `AGENTS.md`, `CLAUDE.md`, `scripts/check.sh`, the hooks and tech debt; the

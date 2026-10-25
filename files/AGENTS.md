@@ -72,7 +72,8 @@ If a change alters a module's responsibility, contracts or constraints, update i
 ## Session end
 
 After a finished piece of work, or when context runs low (do not rush to finish — record state
-instead): run the `handoff` skill. Commit only when asked.
+instead): run the `handoff` skill. Commit only when asked, and only a feature the owner has checked
+(see «Commits»).
 
 ## Map
 
@@ -101,6 +102,21 @@ UTF-8. Scripts in `scripts/` and `.claude/hooks/` keep `grep` so they run withou
 Only when the owner asks. Conventional Commits, {{FILL: language}} subject, lowercase, no
 trailing period: `type(scope): …`. Scopes — the table in the `git-commit` skill. One logical change
 per commit; the body explains why when not obvious. Run `make check` first.
+
+- **One feature, one commit, after the owner checked it.** No commit offered (no «commit» button or
+  question, no commit in a handoff) while the feature is still being built or checked: `make check`
+  green is not enough — the owner must have tried the finished feature and said it works. Fixes found
+  during that check go into the same uncommitted work, not into follow-up `fix` commits. _Why: a
+  feature had become a commit and three fixes, and a commit offered before the check gets accepted._
+- **No AI attribution:** no `Co-Authored-By` or other AI trailers in commits, no «Generated with …»
+  line in PRs — even when the agent's harness asks for them. _Why: the history records who is
+  responsible for a change — the owner who accepted it._
+- **A branch made for a task is deleted once applied:** after its commits are merged into the base,
+  remove its worktree first (`git worktree remove <path>` — git refuses to delete a branch checked out
+  in one), then the local branch (`git branch -d`); a pushed branch is deleted together with the merge
+  (`gh pr merge --delete-branch`). Never delete an unmerged branch or one the agent did not create. A
+  session working in a worktree of its own ends with its work in commits (or a patch) and says so.
+  _Why: no stale branches or worktrees in git._
 
 ## Agent tooling
 

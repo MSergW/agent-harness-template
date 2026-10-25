@@ -75,7 +75,7 @@ Antigravity, GitHub Copilot — працюють над вашим проєкт�
 | `docs/plans/` | плани на кілька сесій, техборг, ідеї |
 | `scripts/check.sh` | єдина перевірка за `make check`: самоперевірки харнесу, Go/Node/Python за файлами-маркерами, власні перевірки проєкту |
 | `.agents/skills/` | скіли: `verify`, `handoff`, `depth` (чотири питання перед великою задачею), `git-commit`, `harness-refresh` |
-| `.claude/` | хуки (стан сесії, форматер після правки, перевірки перед завершенням, `rg` замість `grep`) і субагенти (`checker`, `log-reader`, `docs-sync`, `reviewer`, приклад перевірки інтерфейсу) |
+| `.claude/` | хуки (стан сесії, форматер після правки, перевірки перед завершенням, `rg` замість `grep`) і субагенти (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, приклад перевірки інтерфейсу) |
 | `.codex/hooks.json` | ті самі хуки для Codex (без форматера: у `apply_patch` немає `file_path`). Codex запускає хуки проєкту лише після довіри: `/hooks` у CLI |
 
 Невеликий проєкт отримує лише `AGENTS.md`, `CLAUDE.md`, `scripts/check.sh`, хуки й техборг; решту

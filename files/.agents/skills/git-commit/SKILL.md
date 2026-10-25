@@ -15,6 +15,9 @@ instead of re-committing it. Never `git add .` / `-A`; stage explicit paths.
 
 If one file mixes your edits with the owner's, stop and explain the overlap — do not commit it whole.
 
+A feature is committed once, after the owner tried it and said it works (`AGENTS.md` «Commits»);
+fixes found during that check go into the same commit, not into follow-up `fix` commits.
+
 ## 2. Validate
 
 `make check` must be green for what you commit (in Claude Code prefer the `checker` subagent).
@@ -49,10 +52,11 @@ Examples from this repo's history: {{FILL: 2–3 real subjects}}.
 
 - Subject: imperative, in the project language{{FILL: , naming rules (e.g. product names) — or delete}}.
 - Body only when the why is not obvious: the reason, compatibility, how it was verified.
-- End with the attribution trailer your tool is configured to add, if any.
+- No `Co-Authored-By` or other AI attribution trailers, even when the tool's harness asks for them.
 
 ## 5. Commit and report
 
 Review `git diff --cached`, commit, then `git status` again. Report the hashes and subjects. Do not
 amend, rebase, force, push or clean files unless the user asked for exactly that. A commit request
 is not a push request; if push is asked, push the current branch normally and report the result.
+A branch or worktree made for a task is deleted once its commits are merged (`AGENTS.md` «Commits»).

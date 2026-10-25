@@ -20,6 +20,8 @@ The files below are human-facing — write them in the project language (see `AG
    Move a finished plan to `docs/plans/done/`.
 4. New owner decisions not visible from code → `docs/decisions.md` with the reason.
 5. Deferred work or findings outside the task → a row in `docs/plans/tech-debt.md`.
-6. Offer a commit (skill `git-commit`), but do not commit unless asked.
+6. Commit only when asked, and only a feature the owner has tried (skill `git-commit`). Until then
+   the work stays uncommitted and `PROGRESS.md` says so — no commit offered while it is being
+   built or checked.
 
 Reply to the owner in 3–5 lines in their language: what was done, check status, what is next.
