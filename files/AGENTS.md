@@ -32,6 +32,9 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
   `docs/plans/`, `docs/decisions.md`, commit messages — is {{FILL: project language}}. Agent-only
   files (this file, module maps, `CLAUDE.md`, `.agents/`, `.claude/`) are English. Answer the owner
   in the language they write in. Never translate existing UI text.
+- **Domain terms — [GLOSSARY.md](GLOSSARY.md)** (in the project language). Code names, UI, docs and
+  answers use its terms, never the words under «Avoid». When the owner or the code uses a term against
+  it, say so and ask which is meant; a new or changed term goes into the glossary in the same change.
 - **Do not touch without an explicit request:** {{FILL: `.env`, data directories, key/vault
   files, deploy targets, shared libraries in sibling repos}}, deploys, `git push`.
 - {{FILL: project rules that came from incidents or the owner's decisions, each ending with

@@ -44,8 +44,24 @@ never regenerate them. Human-facing files stay in the project language; agent-on
   `~/.codex/sessions/**/*.jsonl` with a `cwd` inside the project) — the owner's corrections and
   mistakes that repeated. Read sessions through `jq`/`rg` or subagents, never whole in the main
   context; never copy secrets or personal data from them.
+- Walk the sessions by these categories, most costly first (from Matt Pocock's `retro`):
+  - **navigation** — the agent searched long for a file or a fact: a pointer in a map or `AGENTS.md`;
+  - **automated checks** — a mistake a check could have caught; a check that exists but is not wired
+    into `make check` or is silently broken is the finding, not a new one;
+  - **review** — a mistake the reviewer let through: a line in `REVIEW.md`;
+  - **steering size** — rules in `AGENTS.md` that belong in a check, `REVIEW.md`, a module map or a skill;
+  - **no-ops** — instructions that change nothing the agent does: delete them;
+  - **tool economy** — expensive calls repeated (whole files, long outputs in the main context, many
+    round trips): a narrower command, a subagent, a script;
+  - **information access** — a fact the agent needed and could not reach (a log, a read-only access, a
+    recorded output);
+  - **language** — a term the owner corrected, or two words used for one thing: `GLOSSARY.md`.
+- Where a rule goes: a mechanical one (a fixed pattern, a banned name or API, an import shape, a file
+  location) becomes a check in `scripts/check.sh` — build the check rather than write the rule; a
+  judgement call goes to `REVIEW.md`, read by the reviewer, who has the least context pressure; only
+  what every session needs before its first step stays in `AGENTS.md`, preferably as a pointer.
 - A mistake or correction that happened twice becomes a mechanical check in `scripts/check.sh` when
-  it can be checked; otherwise one line in `AGENTS.md`, a module map or a skill.
+  it can be checked; otherwise one line in `REVIEW.md`, `AGENTS.md`, a module map or a skill.
 - `REVIEW.md` «What to look for» follows the hard rules: a new rule `make check` cannot see gets a
   line there; a line a check now enforces is removed; a class the reviewer found twice becomes a
   check when it can be checked.
@@ -55,6 +71,8 @@ never regenerate them. Human-facing files stay in the project language; agent-on
 ## 5. State
 
 - `PROGRESS.md`: close open questions the code now answers; the current state matches HEAD.
+- `GLOSSARY.md`: terms that appeared in the window's UI, docs or decisions are there; a renamed term
+  moved its old word under «Avoid»; no implementation details crept in.
 - `docs/plans/`: plans with every step done and evidenced move to `done/`.
 - `docs/plans/tech-debt.md`: close fixed rows naming the commit. A linter baseline
   (`new-from-rev`) whose debt is closed is removed.

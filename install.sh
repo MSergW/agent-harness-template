@@ -13,7 +13,7 @@ git -C "$dest" rev-parse --git-dir >/dev/null 2>&1 || { echo "$dest is not a git
 [ "$profile" = --small ] && profile=small
 
 # Files the small profile does not get (they are added later, with these names, when it grows).
-small_skip='^(PROGRESS\.md|REVIEW\.md|docs/decisions\.md|docs/plans/(README|ideas)\.md|docs/plans/done/|\.agents/|\.claude/agents/|\.claude/launch\.json\.example)'
+small_skip='^(PROGRESS\.md|REVIEW\.md|GLOSSARY\.md|docs/decisions\.md|docs/plans/(README|ideas)\.md|docs/plans/done/|\.agents/|\.claude/agents/|\.claude/launch\.json\.example)'
 
 copied=(); kept=(); notes=()
 

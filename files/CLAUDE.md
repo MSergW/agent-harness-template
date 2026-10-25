@@ -11,7 +11,8 @@
     the check before finishing) — except the formatter: Codex edits through `apply_patch`, whose
     input has no `file_path`, so formatting there is left to the check before finishing.
 - Skills (`.claude/skills/` → symlinks to `.agents/skills/`): `verify`, `handoff`, `depth` (four
-  questions before a big task), `git-commit` and `harness-refresh` (the last two only on explicit
+  questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a red
+  command first, then hypotheses), `git-commit` and `harness-refresh` (the last two only on explicit
   request){{FILL: , project skills}}.
 - Agents (`.claude/agents/`, none of them edits files or pushes; only `committer` commits): `checker` (haiku; runs
   `make check`, returns GREEN or the failure verbatim — prefer it over running the check in the main

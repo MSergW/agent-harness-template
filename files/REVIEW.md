@@ -30,7 +30,8 @@ The project's hard rules (`AGENTS.md`) that `make check` cannot see:
   system reads changed without the same change on its side». A rule `make check` enforces is not
   repeated here.}}
 - secrets: in logs, error messages, API responses, command output;
-- a test weakened, deleted or asserting less than its name says; a changed UI text without its test.
+- a test weakened, deleted or asserting less than its name says; a changed UI text without its test;
+- a word `GLOSSARY.md` lists under «Avoid» in a new name, UI text or doc; a new domain term not added there.
 
 Correctness in the changed code:
 - writes that must be one transaction but are several; read-then-write races; a migration that

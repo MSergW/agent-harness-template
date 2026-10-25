@@ -68,10 +68,11 @@ Full, unless all hold — then small: one deployable binary/package, roughly und
 code, no web UI of its own, tasks usually fit one session. `install.sh --small` installs only the
 small subset; if you decide differently from what was installed, tell the owner and stop.
 
-Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, skills or subagents (they are
-added later with the same names); delete the review paragraph from `AGENTS.md` «Definition of done»
-and the `depth` line from its «Session start», the `reviewer` and `depth` from `CLAUDE.md` and its «Token efficiency & delegation» block; keep `AGENTS.md` ~40–80 lines and delete sections that would be
-empty.
+Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, `GLOSSARY.md`, skills or subagents (they are
+added later with the same names); delete from `AGENTS.md` the review paragraph of «Definition of
+done», the `depth` line of «Session start» and the «Domain terms» rule; from `CLAUDE.md` the `reviewer`,
+`depth`, `diagnose` and the «Token efficiency & delegation» block; keep `AGENTS.md` ~40–80 lines and
+delete sections that would be empty.
 
 ## 4. Fill the files
 
@@ -83,6 +84,9 @@ empty.
   written as what it looks like in a diff (a rule a check enforces is not repeated), and the traps of
   this stack (its database transactions, concurrency, calls to other systems); «What to ignore»
   names the real formatters and linters. Keep the rest (scope, findings, two rounds) as it is.
+- `GLOSSARY.md` — the project's own terms from the UI, docs, code names and the owner's decisions (and
+  past sessions' corrections of a word), each with the words to avoid; the rules comment at the top stays
+  English. Few or none found — keep only the headings.
 - `PROGRESS.md`, `docs/decisions.md`, `docs/plans/*` — in the project language, headings translated;
   the first decision entry records the harness, others come from what you found (marked when only
   from a chat or memory).

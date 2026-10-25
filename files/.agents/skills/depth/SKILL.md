@@ -36,6 +36,14 @@ Then restate the task in one paragraph: the goal, what it starts from, how it is
   the work starts** — before the first code edit or the plan — and wait for the owner's word on the
   «optional» proposals; with none, go on without waiting. _Why: answers shown only in the final report come
   after the decisions they were for._
+- When the answers leave decisions open (how a case behaves, which of two ways, what the owner wants
+  shown), settle them in **rounds** before the work starts. The decisions form a tree: one answer opens
+  the questions that hang off it. A round asks every question whose prerequisites are already settled —
+  numbered, each with your recommended answer, worded so that «yes» accepts it; a question that depends
+  on another one still open waits for a later round. Facts are your job, never the owner's: look them
+  up in the code, data or logs (a subagent, in parallel) and ask only the decisions. Done when no branch
+  is left open or silently assumed. _Why: from Matt Pocock's `grilling` — one list at the end asks the
+  owner to guess at answers that depend on each other._
 - A session started to work on its own (from a brief, nobody waiting at the keyboard) takes only the
   «project rule» proposals and names the «optional» ones in its report, undone.
 - Nothing beyond the request is added silently («One task at a time»). Unchosen proposals go to

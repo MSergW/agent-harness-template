@@ -64,6 +64,14 @@ for map in $({ git ls-files '*/AGENTS.md'; git ls-files --others --exclude-stand
   fi
 done
 
+step "debug probes left"
+# The diagnose skill tags every temporary log line with [DEBUG-<4 hex>]; none may outlive the diagnosis.
+# The pattern is split so this line does not match itself.
+probe='\[DE''BUG-[0-9a-f]{4}\]'
+left=$(git grep -nIE "$probe" -- . 2>/dev/null; git ls-files --others --exclude-standard -z | xargs -0 grep -HnIE "$probe" 2>/dev/null)
+[ -z "$left" ] || fail "debug probes left:
+$left" "remove the temporary log lines (the diagnose skill, step 6)"
+
 if [ -f go.mod ]; then
   step "go: gofmt"
   unformatted=$(gofmt -l $(go list -f '{{.Dir}}' ./... 2>/dev/null) 2>/dev/null)
