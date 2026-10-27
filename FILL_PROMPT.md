@@ -54,11 +54,30 @@ broke more than once, what was decided in a chat. Read it before filling the fil
     anything, a command that does not work here, a file or path it must not touch;
   - code areas where sessions kept getting stuck or breaking things — pitfalls for module maps;
   - decisions taken in a chat and not visible in the code; work left unfinished.
+- **What got in the owner's way** — not the agent's mistakes, the owner's friction (the categories of
+  Matt Pocock's `retro`):
+  - the same permission asked again and again for a safe command (Claude Code: tool calls followed by
+    a permission prompt, the same command across sessions) → an allow rule in `.claude/settings.json`;
+    a dangerous one stays «ask»;
+  - complaints about the answers — too long, the wrong language, a question the agent could have
+    answered itself, a summary that hid what was not done → one line on how to answer in `AGENTS.md`
+    (or `CLAUDE.md`, when it is about Claude Code only);
+  - navigation — the agent searched long for a file or a fact → a pointer in «Map» or a module map;
+  - tool economy — whole files or long logs read in the main context, the same expensive call
+    repeated → a narrower command in «Commands», a subagent (`log-reader`, `checker`), a script;
+  - information access — a fact the agent needed and could not reach (a log, a read-only access, a
+    recorded real output) → where it lives, in `AGENTS.md` or the `verify` skill;
+  - waiting — the owner waiting on a slow check or a long loop → a narrower check in the stop hook.
 - **Where it goes.** A repeated mistake that can be checked → a step in `scripts/check.sh` or the
   stop hook. A rule → a hard rule in `AGENTS.md` with `_Why: <what happened> (<date>, session)._`,
   or a line in a skill, `REVIEW.md` or a module map. A decision → `docs/decisions.md`, marked «from a
   session» when the code does not confirm it. Unfinished work → `PROGRESS.md` or tech debt. Check
   each against the current code first: a problem the code has since fixed is not a rule.
+- **Apply or propose.** Only what is certain goes in by itself: the owner said it as a rule, or it
+  happened in two sessions or more and the code still allows it. The rest — seen once, a preference
+  you infer («the owner seems to dislike …»), friction whose fix changes how the owner works (a new
+  allow rule, a rule on how to answer, a slower but stricter check) — is a proposal for the report,
+  not a file change: the owner chooses.
 - **Privacy.** Transcripts hold secrets, passwords, tokens, addresses and personal data. Never copy
   them into any file or the report: the harness is committed and may become public.
 
@@ -153,6 +172,10 @@ file or keep it as a one-line pointer to `AGENTS.md`.
 6. Report to the owner in their language: profile, files filled or merged, commands verified and
    their results, rules merged or dropped, contracts found, what the past sessions gave (how many
    were read; rules, checks and decisions taken from them), what was not verified, open questions.
+   Then, apart, **«Proposed — your choice»**: the proposals from the past sessions (section 2), most
+   costly first, each one line — what keeps happening (how often, an example with its date), what
+   would change and in which file; numbered, so the owner can answer «take 1 and 3». Nothing from
+   this list is in the files until the owner picks it.
 7. Commit only when the owner asks, separately from other work: formatting-only fixes in their own
    commit, then the harness (`chore(agents): …` in the project language). After the commit, run
    `make check` on a fresh clone (`git clone . <tmp>`).

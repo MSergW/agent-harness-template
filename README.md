@@ -46,7 +46,9 @@ Requirements: `git`, `bash`, [`jq`](https://jqlang.org) (used by hooks), [`ripgr
    agent files, makes `make check` green and reports back. It also reads your past Claude Code and
    Codex sessions on this project: your corrections and the agent's repeated mistakes become rules
    and checks, decisions made in a chat go to `docs/decisions.md` (secrets from transcripts are never
-   copied).
+   copied). What got in your way — the same permission asked again, answers you complained about, slow
+   loops — and anything seen only once comes as a numbered «Proposed — your choice» list in the report:
+   nothing from it changes until you pick it.
 4. Read the report, then ask the agent to commit.
 
 While a single `{{FILL` marker is left, `make check` is red, so a half-filled harness cannot slip
@@ -112,6 +114,21 @@ git config --global core.symlinks true              # needs Developer Mode (Sett
 - A mistake that happened twice becomes a check in `scripts/check.sh`, not another paragraph.
 - An improvement found in one project goes back into this template's `files/`, so the next project
   gets it from the start.
+
+## Credits
+
+The harness is put together from other people's ideas and the author's own practice; the borrowed parts:
+
+- [Matt Pocock's skills](https://github.com/mattpocock/skills) (MIT) — `diagnose` follows his
+  `diagnosing-bugs`, the decisions in rounds of `depth` his `grilling`, the format of `GLOSSARY.md` his
+  `domain-modeling`, the categories `harness-refresh` and the fill prompt walk past sessions by his `retro`.
+- Felix Rieseberg, «How to be more ambitious: a tutorial for humans with models»
+  ([felixrieseberg.com](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/)) — the four questions of `depth`.
+- [AGENTS.md](https://agents.md) and the `SKILL.md` format of agent skills — one set of instructions and
+  skills that Claude Code, Codex, Copilot and other agents read.
+
+The rest — the hard rules with their reasons, `make check` and the stop hook, the diff review in a fresh
+context, the handoff — grew out of daily work on a production project.
 
 ## License
 
