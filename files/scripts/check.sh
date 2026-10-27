@@ -91,6 +91,20 @@ if [ -f go.mod ]; then
   if has golangci-lint; then
     golangci-lint run ./... || fail "golangci-lint" "fix the findings; exceptions only in .golangci.yml with a reason"
   else skip golangci-lint; fi
+  # Known vulnerabilities the code actually calls (modules and stdlib), from vuln.go.dev, a few seconds.
+  # Exit 3 — a vulnerability found; any other non-zero — the tool did not run (no network, built with
+  # an older Go): a skip with a note, not a red line.
+  step "go: govulncheck"
+  if has govulncheck; then
+    out=$(govulncheck ./... 2>&1)
+    case $? in
+      0) ;;
+      3) printf '%s\n' "$out" | sed -n '/^Vulnerability #/,/^$/p' | head -30
+         fail "govulncheck" "upgrade the module to the fixed version (go get <module>@<version>) or Go; govulncheck -show verbose ./..." ;;
+      *) printf '%s\n' "$out" | head -5
+         echo "govulncheck did not run — skipped (rebuild: go install golang.org/x/vuln/cmd/govulncheck@latest)" ;;
+    esac
+  else skip govulncheck; fi
 fi
 
 if [ -f package.json ] && has npm; then
@@ -118,10 +132,25 @@ layer_done 1
 # ---------- Layer 2: behaviour ----------
 
 if [ -f go.mod ]; then
-  step "go: test"
-  out=$(go test ./... 2>&1) || {
-    printf '%s\n' "$out" | grep -E '^(--- FAIL|FAIL|panic:)|_test\.go:[0-9]+:' | head -30
-    fail "go test" "if a text or template changed on purpose, update the test; otherwise fix the code. Never weaken tests"
+  # With the race detector. A package much slower under it can go to race_slow (import paths, one per
+  # line): it then runs without -race, and `make check RACE=all` runs everything with it (before a release).
+  race_slow=""
+  step "go: test (-race)"
+  go_tests() {
+    if [ "$(go env CGO_ENABLED)" != 1 ]; then
+      echo "cgo is off — the race detector needs it; tests run without -race"
+      go test ./...
+    elif [ -z "$race_slow" ] || [ "${RACE:-}" = all ]; then
+      go test -race ./...
+    else
+      # Package paths have no spaces: splitting the list into arguments is intended.
+      # shellcheck disable=SC2046
+      go test -race $(go list ./... | grep -vxF "$race_slow") && go test $race_slow
+    fi
+  }
+  out=$(go_tests 2>&1) || {
+    printf '%s\n' "$out" | grep -E -A3 '^(--- FAIL|FAIL|panic:)|_test\.go:[0-9]+:|^WARNING: DATA RACE' | head -40
+    fail "go test" "if a text or template changed on purpose, update the test; DATA RACE — synchronise the shared data; otherwise fix the code. Never weaken tests"
   }
 fi
 
