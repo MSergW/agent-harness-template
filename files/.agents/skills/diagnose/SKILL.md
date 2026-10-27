@@ -61,6 +61,11 @@ same callers, the same chain). Watch it fail, fix, watch it pass, then run the s
 not minimised, case. No such seam — that is a finding: name it to the owner and add a row to
 `docs/plans/tech-debt.md`; a test at a too-shallow seam gives false confidence.
 
+Two fixes that rest on the same premise fail the same check — stop before a third. Write that premise in
+one sentence, name who holds the state it assumes, and test it as a hypothesis (steps 3–4): the premise is
+usually the bug. Tell the owner which premise fell. _Why: «Attack the Premise» from Robert Martin's
+`ub-mode` — a third fix on a wrong premise only hides the symptom._
+
 ## 6. Cleanup
 
 - The step-1 loop is green on the original case; the regression test passes (or the missing seam is recorded).

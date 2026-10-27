@@ -31,6 +31,9 @@ The project's hard rules (`AGENTS.md`) that `make check` cannot see:
   repeated here.}}
 - secrets: in logs, error messages, API responses, command output;
 - a test weakened, deleted or asserting less than its name says; a changed UI text without its test;
+- a new or changed test that would still pass if the code under it returned zero values or did
+  nothing — it asserts only «no error», a length, that a mock was called, or the value it set up
+  itself; the test must fail on a wrong result the code's user would see;
 - a word `GLOSSARY.md` lists under «Avoid» in a new name, UI text or doc; a new domain term not added there.
 
 Correctness in the changed code:

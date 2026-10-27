@@ -124,6 +124,8 @@ The harness is put together from other people's ideas and the author's own pract
   `domain-modeling`, the categories `harness-refresh` and the fill prompt walk past sessions by his `retro`.
 - Felix Rieseberg, «How to be more ambitious: a tutorial for humans with models»
   ([felixrieseberg.com](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/)) — the four questions of `depth`.
+- [Robert Martin's ub-mode](https://github.com/unclebob/ub-mode) — the review finding for a test that would
+  pass on an empty result, and «Attack the Premise» in `diagnose`.
 - [AGENTS.md](https://agents.md) and the `SKILL.md` format of agent skills — one set of instructions and
   skills that Claude Code, Codex, Copilot and other agents read.
 

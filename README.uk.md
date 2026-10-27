@@ -121,6 +121,8 @@ git config --global core.symlinks true              # потрібен режи�
   `harness-refresh` і промпт заповнення розбирають минулі сесії, — за `retro`.
 - Фелікс Різеберг, «How to be more ambitious: a tutorial for humans with models»
   ([felixrieseberg.com](https://felixrieseberg.com/how-to-be-more-ambitious-a-tutorial-for-humans-with-models/)) — чотири питання `depth`.
+- [ub-mode Роберта Мартіна](https://github.com/unclebob/ub-mode) — знахідка рев'ю для тесту, який пройшов би на
+  порожньому результаті, і «Attack the Premise» у `diagnose`.
 - [AGENTS.md](https://agents.md) і формат скілів `SKILL.md` — один набір інструкцій і скілів, який читають
   Claude Code, Codex, Copilot та інші агенти.
 
