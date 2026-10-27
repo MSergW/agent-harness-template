@@ -9,7 +9,7 @@ This file is a router plus hard rules; details live in the linked documents.
 2. This `AGENTS.md` and the closest nested `AGENTS.md` (module maps, see «Map»).
 3. Project skills (`.agents/skills/`), `docs/decisions.md`, active plans in `docs/plans/`.
 4. `README.md` and `docs/*.md` (user and deployment documentation).
-5. `PROGRESS.md`, audits, agent memory and past chats — they explain intent but may describe code
+5. `PROGRESS.md` and its archive `docs/progress/`, audits, agent memory and past chats — they explain intent but may describe code
    that no longer exists. Verify against the code before acting on them.
 
 When sources disagree, the higher one wins; fix or flag the stale lower one.
@@ -17,7 +17,9 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 ## Session start
 
 1. `git status`, `git log --oneline -5`. Uncommitted changes you did not make belong to the owner.
-2. Read `PROGRESS.md` (current state, in progress, next).
+2. `PROGRESS.md`: the session-start hook shows its latest state, in progress and the top of next
+   (agents without the hook: the same parts). Read further only the section the task needs
+   (`rg -n '^## ' PROGRESS.md`), never the whole file; older entries — `rg` over `docs/progress/`.
 3. For multi-step work, open the active plan in `docs/plans/`.
    Before a new plan or a feature across several modules, run the `depth` skill (four questions).
 4. Before changing code run `make check`. If the baseline is red, tell the owner and fix it first

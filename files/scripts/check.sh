@@ -64,6 +64,15 @@ for map in $({ git ls-files '*/AGENTS.md'; git ls-files --others --exclude-stand
   fi
 done
 
+step "harness: PROGRESS.md size"
+# State, not a log: the current state keeps the five latest pieces, older ones go to docs/progress/
+# by week (the handoff skill). The session-start hook shows only its top; the rest is read by section.
+if [ -f PROGRESS.md ]; then
+  progress_bytes=$(wc -c < PROGRESS.md | tr -d ' ')
+  [ "$progress_bytes" -le 40960 ] || fail "PROGRESS.md is $progress_bytes bytes (limit 40960)" \
+    "move older current-state entries to docs/progress/<year>-W<week>.md, drop done items from next (the handoff skill)"
+fi
+
 step "debug probes left"
 # The diagnose skill tags every temporary log line with [DEBUG-<4 hex>]; none may outlive the diagnosis.
 # The pattern is split so this line does not match itself.

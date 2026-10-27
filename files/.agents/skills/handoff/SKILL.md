@@ -15,7 +15,13 @@ The files below are human-facing — write them in the project language (see `AG
    - in progress — the active task and where you stopped (file, step);
    - next — 1–3 concrete actions, plus anything not verified at layer 3;
    - open questions — what waits for the owner's decision.
-   Keep it short: replace stale content, do not append a log.
+   Keep it short: replace stale content, do not append a log. The current state holds the five
+   latest finished pieces: adding one, move the oldest beyond five to
+   `docs/progress/<ISO year>-W<week>.md` of its date, newest first, under a header naming the week
+   (a new week: copy the previous file's header); relative links there get `../../` in front. Before
+   moving it, anything it says is left to do or to check goes to next or tech debt. «Next» keeps
+   real next actions only — drop what is done, merge checks that wait for the same deploy into one
+   item, long-term or blocked items go to tech debt. `make check` turns red above 40 KB.
 3. Active plan in `docs/plans/` — tick steps with evidence (command, commit, where verified).
    Move a finished plan to `docs/plans/done/`.
 4. New owner decisions not visible from code → `docs/decisions.md` with the reason.

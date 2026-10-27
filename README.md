@@ -75,7 +75,7 @@ through.
 | `AGENTS.md` | the main instructions for every agent: hard rules, definition of done, map, commands |
 | `CLAUDE.md` | `@AGENTS.md` plus what exists only in Claude Code (hooks, skills, subagents) |
 | `REVIEW.md` | the diff review: what to look for (rules `make check` cannot see, correctness of the changed lines), what to ignore, at most two rounds |
-| `PROGRESS.md` | the current state for the next session |
+| `PROGRESS.md` | the current state for the next session (five latest entries, under 40 KB); older entries — `docs/progress/` by week |
 | `docs/decisions.md` | decisions not visible from the code, with their reasons |
 | `docs/plans/` | multi-session plans, tech debt, ideas |
 | `scripts/check.sh` | the single check behind `make check`: harness self-checks, Go/Node/Python by marker files, the project's own checks |
