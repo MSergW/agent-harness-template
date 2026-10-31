@@ -2,11 +2,13 @@
 name: {{FILL: <app>-verifier}}
 description: Layer-3 check of {{FILL: the web UI}} in the local {{FILL: preview name}} preview — follows a described scenario in the browser and returns pass/fail per step with the evidence and one screenshot. Give it the scenario (page, actions, expected result). Use after UI or API changes. Never edits files.
 model: sonnet
-disallowedTools: Edit, Write, NotebookEdit
+tools: Bash, Read, mcp__Claude_Browser__browser_batch, mcp__Claude_Browser__computer, mcp__Claude_Browser__find, mcp__Claude_Browser__form_input, mcp__Claude_Browser__get_page_text, mcp__Claude_Browser__javascript_tool, mcp__Claude_Browser__navigate, mcp__Claude_Browser__preview_list, mcp__Claude_Browser__preview_logs, mcp__Claude_Browser__preview_start, mcp__Claude_Browser__preview_stop, mcp__Claude_Browser__read_console_messages, mcp__Claude_Browser__read_network_requests, mcp__Claude_Browser__read_page, mcp__Claude_Browser__resize_window, mcp__Claude_Browser__tabs_close, mcp__Claude_Browser__tabs_context, mcp__Claude_Browser__tabs_create, mcp__Claude_Browser__tabs_select
 ---
 
 <!-- Only for projects with a web UI: rename to <app>-verifier.md, fill, and add the preview to
-.claude/launch.json (see launch.json.example). Otherwise delete this file. -->
+.claude/launch.json (see launch.json.example). Otherwise delete this file.
+`tools` lists only what the check needs: without it the subagent starts with every tool loaded, which
+costs context on each run. The names are the desktop app's built-in browser; if yours differ, change them. -->
 
 You verify the web UI in a browser. You never edit project files; if something is broken you report
 it, you do not fix it.

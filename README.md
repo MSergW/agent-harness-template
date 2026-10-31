@@ -23,6 +23,7 @@ The harness answers each of these with a file or a mechanical check, not with a 
 | The agent does not know the rules | `AGENTS.md`: hard rules with the reason for each, a map of the code, the commands |
 | «Done» without evidence | one command, `make check`, and a hook that runs quick checks on changed files before the agent may finish |
 | Context is lost between sessions | `PROGRESS.md` (where things stand) and `docs/decisions.md` (why), updated by the `handoff` skill and shown by the session-start hook |
+| Long sessions cost more with each turn | «Context economy» in `AGENTS.md`: a large step in its own session, one full check and review per step, short outputs |
 | The writer reviews its own work | `REVIEW.md` and the `reviewer` subagent: a diff review in a fresh context, at most two rounds |
 | Instructions drift from the code | `make check` fails on unfilled markers or broken skill links; the `harness-refresh` skill re-syncs everything on request |
 | Each tool wants its own files | one `AGENTS.md` and one `.agents/skills/` read by every tool; Claude Code and Codex share the same hook scripts |

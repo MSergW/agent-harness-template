@@ -5,7 +5,15 @@
 command -v jq >/dev/null || exit 0   # jq is not bundled with Git for Windows: winget install jqlang.jq
 input=$(cat)
 [ "$(jq -r '.stop_hook_active // false' <<<"$input" | tr -d '\r')" = true ] && exit 0
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+# In a worktree CLAUDE_PROJECT_DIR is the main checkout, so the session's own directory comes first.
+# A directory outside this project (not a repository, another repository) would pass the check unseen.
+cwd=$(jq -r '.cwd // empty' <<<"$input" | tr -d '\r')
+root=""
+for dir in ${cwd:+"$cwd"} "${CLAUDE_PROJECT_DIR:-.}"; do
+  root=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null) && [ -f "$root/.claude/hooks/stop-check.sh" ] && break
+  root=""
+done
+cd "$root" 2>/dev/null && [ -n "$root" ] || exit 0
 
 changed=$({ git diff --name-only HEAD; git ls-files --others --exclude-standard; } | sort -u)
 [ -z "$changed" ] && exit 0

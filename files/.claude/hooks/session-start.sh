@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # SessionStart: short repository state for the new session's context.
-cd "${CLAUDE_PROJECT_DIR:-.}" || exit 0
+# In a worktree CLAUDE_PROJECT_DIR is the main checkout, so the session's own directory comes first.
+[ -t 0 ] || cwd=$(jq -r '.cwd // empty' 2>/dev/null | tr -d '\r')
+cd "${cwd:-${CLAUDE_PROJECT_DIR:-.}}" || exit 0
+cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || exit 0
 echo "Branch: $(git branch --show-current)"
 echo "Recent commits:"
 git log --oneline -5 | sed 's/^/  /'

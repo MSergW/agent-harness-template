@@ -74,6 +74,20 @@ Also: update the affected `docs/` page in the same commit when behaviour or labe
 If a change alters a module's responsibility, contracts or constraints, update its map
 (`AGENTS.md` in that directory) in the same commit; otherwise leave the map alone.
 
+## Context economy
+
+- **A large step of a plan gets its own session**; a small one (a few files, code already read) may go on in the
+  current one. `docs/plans/` and `PROGRESS.md` carry the state between sessions, not the chat.
+- **`make check` and the review run once per step, at its end, together** (the exception to «after `make check` is
+  green» above: the review only reads; if `make check` is red or the review changes code, re-run what that affects).
+  Between edits only narrow checks: the tests of the touched module. A small fix during the owner's check: one
+  review round, not a new full cycle.
+- **Short outputs:** pipe through `rg`/`head`/`tail` or a summary; long logs and wide reading go to a subagent where
+  there is one; edit with short unique fragments, not scripts repeating whole paragraphs.
+
+_Why: every reply re-reads the whole context, so a long session costs more with each turn, and a full check after
+every small edit is slow. A new session is not free either: it re-reads the project before its first edit._
+
 ## Session end
 
 After a finished piece of work, or when context runs low (do not rush to finish — record state

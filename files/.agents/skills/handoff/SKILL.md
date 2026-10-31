@@ -24,6 +24,8 @@ The files below are human-facing — write them in the project language (see `AG
    item, long-term or blocked items go to tech debt. `make check` turns red above 40 KB.
 3. Active plan in `docs/plans/` — tick steps with evidence (command, commit, where verified).
    Move a finished plan to `docs/plans/done/`.
+   A step's evidence and an entry in the current state take 2–3 lines: what changed, the commit, what was verified
+   and what was not. Details live in the commits; never retell the work.
 4. New owner decisions not visible from code → `docs/decisions.md` with the reason.
 5. Deferred work or findings outside the task → a row in `docs/plans/tech-debt.md`.
 6. Commit only when asked, and only a feature the owner has tried (skill `git-commit`). Until then
