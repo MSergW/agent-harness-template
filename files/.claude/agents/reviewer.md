@@ -1,6 +1,6 @@
 ---
 name: reviewer
-description: Reviews one change by its diff in a fresh context against REVIEW.md — hard project rules make check cannot see, and correctness of the changed lines; ignores style and code the diff does not touch. Give it the task in a few sentences and the paths of the change (on the second round also the first round's findings and what was done). Use after make check is green and before the owner checks the change; at most two rounds. Never edits files.
+description: Reviews one change by its diff in a fresh context against REVIEW.md — hard project rules make check cannot see, and correctness of the changed lines; ignores style and code the diff does not touch. Give it the task in a few sentences and the paths of the change (on the second round also the first round's findings and what was done). Use together with make check, before the owner checks the change; at most two rounds. Never edits files.
 model: sonnet
 tools: Read, Grep, Glob, Bash
 ---

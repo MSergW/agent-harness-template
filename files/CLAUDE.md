@@ -35,4 +35,6 @@
     `rg`, `git log`/`git show`, planning). Until it reports, change nothing in the working tree or the
     index — the commit is built from what is on disk; when the next step needs an edit, wait for the
     report and check the hash and `git status` it gives. The same holds for a background `checker`:
-    an edit during the check makes its result say nothing about the tree.
+    an edit during the check makes its result say nothing about the tree. A review back with Block findings
+    while that check runs: stop the check (`TaskStop`), fix, run it again — never wait for a result the fixes void.
+    Findings that change no code: let it finish.

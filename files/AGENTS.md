@@ -65,7 +65,7 @@ Done means runnable evidence, not confidence:
    (`.claude/launch.json`), a test server — ask the owner}}. Say explicitly what was not verified.
 
 Before the owner checks a change of code, it gets a review of its diff in a fresh context by
-[REVIEW.md](REVIEW.md) — after `make check` is green, before layer 3, since its fixes change the
+[REVIEW.md](REVIEW.md) — with `make check` («Context economy»), before layer 3, since its fixes change the
 code. Block findings are fixed and reviewed once more; at most two rounds, then what is still open
 goes to the owner with the change. _Why: the writer does not review its own work — it has seen why
 every line is right._
@@ -78,8 +78,8 @@ If a change alters a module's responsibility, contracts or constraints, update i
 
 - **A large step of a plan gets its own session**; a small one (a few files, code already read) may go on in the
   current one. `docs/plans/` and `PROGRESS.md` carry the state between sessions, not the chat.
-- **`make check` and the review run once per step, at its end, together** (the exception to «after `make check` is
-  green» above: the review only reads; if `make check` is red or the review changes code, re-run what that affects).
+- **`make check` and the review run once per step, at its end, together** (the review only
+  reads, so it need not wait for green; if `make check` is red or the review changes code, re-run what that affects).
   Between edits only narrow checks: the tests of the touched module. A small fix during the owner's check: one
   review round, not a new full cycle.
 - **Short outputs:** pipe through `rg`/`head`/`tail` or a summary; long logs and wide reading go to a subagent where

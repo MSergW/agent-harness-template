@@ -19,7 +19,7 @@ known environment caveats (e.g. tests that need network or a sandbox exception).
 
 ## Review of the diff
 
-After `make check` is green and before layer 3: the review of the diff in a fresh context by
+Together with `make check` and before layer 3: the review of the diff in a fresh context by
 `REVIEW.md` (Claude Code: the `reviewer` subagent; another tool: a new session given the same
 inputs) — the task in a few sentences and the paths of the change. Block findings are fixed and go
 back through `make check`, then the second round gets the first round's findings and what was done.
