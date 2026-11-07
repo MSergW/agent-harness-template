@@ -164,7 +164,8 @@ file or keep it as a one-line pointer to `AGENTS.md`.
 2. `.claude/` is tracked: `git check-ignore -v .claude/settings.json` prints nothing.
 3. Each hook run once by hand with sample input (`echo '{}' | bash .claude/hooks/stop-check.sh`,
    and the commands from `.codex/hooks.json` from a subdirectory — Codex may start there;
-   `echo '{"tool_input":{"file_path":"<a source file>"}}' | sh .claude/hooks/format.sh`); the UI
+   `echo '{"tool_input":{"file_path":"<a source file>"}}' | sh .claude/hooks/format.sh`;
+   `echo '{}' | bash .claude/hooks/antigravity.sh stop` prints `{"decision":"stop"}` on a clean tree); the UI
    preview (if any) started once and its login page loads.
 4. Cold start: from `AGENTS.md` and its links alone, a new agent can tell the current task, how to
    verify it and what «done» means.

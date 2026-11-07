@@ -144,8 +144,10 @@ per commit; the body explains why when not obvious. Run `make check` first.
   symlinks to them for Claude Code (`make check` fails on a copy or a missing link). A skill that
   runs only on explicit request has `disable-model-invocation: true` and `agents/openai.yaml` with
   `allow_implicit_invocation: false`.
-- Hooks run in Claude Code (`.claude/settings.json`) and in Codex (`.codex/hooks.json`) — the same
-  scripts in `.claude/hooks/`. Codex loads project hooks only after the project and each hook are
+- Hooks run in Claude Code (`.claude/settings.json`), Codex (`.codex/hooks.json`) and Antigravity
+  (`.agents/hooks.json`, through `.claude/hooks/antigravity.sh`) — the same scripts in `.claude/hooks/`.
+  Its `ask-before-edit` hook (off by default; `"enabled": true` turns it on) makes every file edit
+  wait for the owner's approval. Codex loads project hooks only after the project and each hook are
   trusted (`/hooks` in the Codex CLI; a changed hook needs review again). Subagents and the local
   preview are Claude Code only. Agents without hooks follow the same rules by hand: `make check`
   before claiming done.

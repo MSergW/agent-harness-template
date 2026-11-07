@@ -84,6 +84,7 @@ through.
 | `GLOSSARY.md` | the project's domain terms, one word per concept and the words to avoid; the reviewer flags the avoided ones |
 | `.claude/` | hooks (session state, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, an example UI verifier) |
 | `.codex/hooks.json` | the same hooks for Codex (without the formatter: `apply_patch` has no `file_path`). Codex runs project hooks only after you trust them: `/hooks` in the CLI |
+| `.agents/hooks.json` | the same hooks for Antigravity, through the adapter `.claude/hooks/antigravity.sh`; plus `ask-before-edit`, off by default: with `"enabled": true` every file edit waits for your click, even after «Always Allow» |
 
 A small project gets only `AGENTS.md`, `CLAUDE.md`, `scripts/check.sh`, the hooks and tech debt; the
 rest is added later under the same names when the project grows.
@@ -108,6 +109,10 @@ git config --global core.symlinks true              # needs Developer Mode (Sett
   `git add --renormalize .`.
 - Without symlink support the installer does not create `.claude/skills/*` and says so in
   `HARNESS_INSTALL.md`; `check.sh` skips the symlink check on such a clone.
+- Antigravity runs hook commands with `cmd /c` on Windows, where `bash` is usually not on `PATH`
+  (or is WSL's). So `.agents/hooks.json` starts them as a git shell alias:
+  `git -c alias.harness-hook="!bash …" harness-hook <event>` — git is on `PATH` in `cmd` and `sh`
+  alike, runs the alias in its own Git Bash and from the repository root.
 
 ## Keeping it alive
 

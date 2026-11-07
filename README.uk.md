@@ -82,6 +82,7 @@ Antigravity, GitHub Copilot — працюють над вашим проєкт�
 | `GLOSSARY.md` | терміни предметної області проєкту: одне слово на поняття і слова, яких уникати; рев'юер позначає уникнуті |
 | `.claude/` | хуки (стан сесії, форматер після правки, перевірки перед завершенням, `rg` замість `grep`) і субагенти (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, приклад перевірки інтерфейсу) |
 | `.codex/hooks.json` | ті самі хуки для Codex (без форматера: у `apply_patch` немає `file_path`). Codex запускає хуки проєкту лише після довіри: `/hooks` у CLI |
+| `.agents/hooks.json` | ті самі хуки для Antigravity, через адаптер `.claude/hooks/antigravity.sh`; а також `ask-before-edit`, вимкнений за замовчуванням: з `"enabled": true` кожна правка файлу чекає вашого кліку, навіть після «Always Allow» |
 
 Невеликий проєкт отримує лише `AGENTS.md`, `CLAUDE.md`, `scripts/check.sh`, хуки й техборг; решту
 додають пізніше з тими самими іменами, коли проєкт виросте.
@@ -105,6 +106,10 @@ git config --global core.symlinks true              # потрібен режи�
   ламаються (`bash\r: not found`). Якщо їх уже викачано з CRLF: `git add --renormalize .`.
 - Без підтримки symlink установник не створює `.claude/skills/*` і пише про це в `HARNESS_INSTALL.md`;
   `check.sh` на такому клоні пропускає перевірку посилань.
+- Antigravity на Windows запускає команди хуків через `cmd /c`, де `bash` зазвичай немає в `PATH`
+  (або це bash із WSL). Тому `.agents/hooks.json` запускає їх як shell-аліас git:
+  `git -c alias.harness-hook="!bash …" harness-hook <подія>` — git є в `PATH` і в `cmd`, і в `sh`,
+  виконує аліас у власному Git Bash і з кореня репозиторію.
 
 ## Як підтримувати
 

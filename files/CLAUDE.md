@@ -10,6 +10,8 @@
   - Codex runs the same scripts through `.codex/hooks.json` (session start, `rg` instead of `grep`,
     the check before finishing) — except the formatter: Codex edits through `apply_patch`, whose
     input has no `file_path`, so formatting there is left to the check before finishing.
+  - Antigravity runs them through `.agents/hooks.json` and the adapter `.claude/hooks/antigravity.sh`,
+    which translates its input and answers; change a shared script, not the adapter.
 - Skills (`.claude/skills/` → symlinks to `.agents/skills/`): `verify`, `handoff`, `depth` (four
   questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a red
   command first, then hypotheses), `git-commit`, `harness-refresh` and `session-title` (the last three only on

@@ -1,0 +1,43 @@
+{
+  "session-state": {
+    "SessionStart": [
+      { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook session-start", "timeout": 10 }
+    ]
+  },
+  "prefer-rg": {
+    "PreToolUse": [
+      {
+        "matcher": "^run_command$",
+        "hooks": [
+          { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook pre-command", "timeout": 5 }
+        ]
+      }
+    ]
+  },
+  "format": {
+    "PostToolUse": [
+      {
+        "matcher": "^(write_to_file|replace_file_content|multi_replace_file_content)$",
+        "hooks": [
+          { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook post-edit", "timeout": 30 }
+        ]
+      }
+    ]
+  },
+  "stop-check": {
+    "Stop": [
+      { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook stop", "timeout": 300 }
+    ]
+  },
+  "ask-before-edit": {
+    "enabled": false,
+    "PreToolUse": [
+      {
+        "matcher": "^(write_to_file|replace_file_content|multi_replace_file_content)$",
+        "hooks": [
+          { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook ask-edit", "timeout": 5 }
+        ]
+      }
+    ]
+  }
+}
