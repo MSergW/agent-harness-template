@@ -149,6 +149,9 @@ per commit; the body explains why when not obvious. Run `make check` first.
   trusted (`/hooks` in the Codex CLI; a changed hook needs review again). Subagents and the local
   preview are Claude Code only. Agents without hooks follow the same rules by hand: `make check`
   before claiming done.
+- **Session title.** When a session's topic clearly changes (it began with one question and ended in a plan, a feature
+  or a different finding), retitle it the way the `session-title` skill says: Claude Code and Codex rename it
+  themselves, Antigravity only proposes the title. On request — the skill itself.
 
 ## Evolving these rules
 
