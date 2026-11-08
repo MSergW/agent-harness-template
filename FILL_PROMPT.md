@@ -4,6 +4,8 @@
 `HARNESS_INSTALL.md` (what was copied, what already existed, other agent files, notes). Your job is
 to turn the template into this project's harness. You are NOT implementing product features: do not
 change application code or behaviour (the only exception: formatting-only fixes, see step 7).
+Filling the harness spans the whole repository, so before your first edit write `*` into `.tmp/scope`
+(the scope fence refuses edits outside the declared scope — `AGENTS.md`, «One task at a time»).
 
 Every place that needs project content is marked `{{FILL: …}}` (the text after the colon says
 what goes there). `make check` fails while any marker is left. Fill each one with real, verified
@@ -158,7 +160,10 @@ before writing it. Fewer accurate maps beat full coverage. Index them in the roo
 
 ## 6. Other tools
 
-Codex, Antigravity and Copilot read `AGENTS.md` and `.agents/skills/`. Other agent files found in
+Codex, Antigravity and Copilot read `AGENTS.md` and `.agents/skills/`; Gemini also reads `GEMINI.md`, a
+short addendum. A `GEMINI.md` the project already had is listed under «Already existed»: move its
+project rules into `AGENTS.md`, then replace it with the template's version plus its Gemini-only rules.
+Other agent files found in
 `HARNESS_INSTALL.md`: move their rules into `AGENTS.md`; ask the owner whether to delete the old
 file or keep it as a one-line pointer to `AGENTS.md`.
 
@@ -178,7 +183,9 @@ file or keep it as a one-line pointer to `AGENTS.md`.
 3. Each hook run once by hand with sample input (`echo '{}' | bash .claude/hooks/stop-check.sh`,
    and the commands from `.codex/hooks.json` from a subdirectory — Codex may start there;
    `echo '{"tool_input":{"file_path":"<a source file>"}}' | sh .claude/hooks/format.sh`;
-   `echo '{}' | bash .claude/hooks/antigravity.sh stop` prints `{"decision":"stop"}` on a clean tree); the UI
+   `echo '{}' | bash .claude/hooks/antigravity.sh stop` prints `{"decision":"stop"}` on a clean tree;
+   `echo '{"tool_input":{"file_path":"<a file not in .tmp/scope>"}}' | bash .claude/hooks/scope-fence.sh pre`
+   prints a deny); the UI
    preview (if any) started once and its login page loads.
 4. Cold start: from `AGENTS.md` and its links alone, a new agent can tell the current task, how to
    verify it and what «done» means.

@@ -3,8 +3,8 @@
 ## Claude Code extras
 
 - Hooks (`.claude/settings.json`, scripts in `.claude/hooks/`): repository state at session start, `rg` instead of
-  `grep`, the formatter after editing a file (not in Codex: `apply_patch` gives no `file_path`), quick checks of the
-  changed files before finishing a reply. Red means the work is not done. Other agents — «Agent tooling» in `AGENTS.md`.
+  `grep`, the scope fence before editing a file (`.tmp/scope`), the formatter after editing a file (not in Codex:
+  `apply_patch` gives no `file_path`), quick checks of the changed files before finishing a reply. Red means the work is not done. Other agents — «Agent tooling» in `AGENTS.md`.
 - Skills and agents are described in their listings. Not listed, only on explicit request: skills `git-commit`,
   `harness-refresh`, `session-title`{{FILL: , project skills that run only on request}}.
 - `reviewer`: give it the task in a few sentences and the paths of the change, never the whole tree (the

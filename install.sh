@@ -86,7 +86,7 @@ fi
 
 # Other agents' instruction files to merge into AGENTS.md.
 others=()
-for f in GEMINI.md .cursorrules .cursor/rules .github/copilot-instructions.md .windsurfrules RULES.md .agent .codex/instructions.md; do  # .codex/ itself is ours now (hooks.json)
+for f in .cursorrules .cursor/rules .github/copilot-instructions.md .windsurfrules RULES.md .agent .codex/instructions.md; do  # .codex/ and GEMINI.md are ours now
   [ -e "$dest/$f" ] && others+=("$f")
 done
 

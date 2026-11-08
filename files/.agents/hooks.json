@@ -14,6 +14,16 @@
       }
     ]
   },
+  "scope-fence": {
+    "PreToolUse": [
+      {
+        "matcher": "^(write_to_file|replace_file_content|multi_replace_file_content)$",
+        "hooks": [
+          { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook pre-edit", "timeout": 10 }
+        ]
+      }
+    ]
+  },
   "format": {
     "PostToolUse": [
       {
@@ -27,17 +37,6 @@
   "stop-check": {
     "Stop": [
       { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook stop", "timeout": 300 }
-    ]
-  },
-  "ask-before-edit": {
-    "enabled": false,
-    "PreToolUse": [
-      {
-        "matcher": "^(write_to_file|replace_file_content|multi_replace_file_content)$",
-        "hooks": [
-          { "type": "command", "command": "git -c alias.harness-hook=\"!bash .claude/hooks/antigravity.sh\" harness-hook ask-edit", "timeout": 5 }
-        ]
-      }
     ]
   }
 }

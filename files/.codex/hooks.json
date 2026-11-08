@@ -22,6 +22,16 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "apply_patch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel 2>/dev/null || pwd); CLAUDE_PROJECT_DIR=\"$root\" bash \"$root/.claude/hooks/scope-fence.sh\" pre",
+            "timeout": 10
+          }
+        ]
       }
     ],
     "Stop": [

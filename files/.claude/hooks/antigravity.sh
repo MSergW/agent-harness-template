@@ -2,8 +2,8 @@
 # Antigravity adapter: .agents/hooks.json calls this with an event name; it turns Antigravity's
 # camelCase input (workspacePaths, toolCall.name/args) into the input the shared scripts in
 # .claude/hooks/ read, and their answers into Antigravity's JSON (decision, injectSteps).
-#   antigravity.sh session-start | pre-command | post-edit | stop | ask-edit
-command -v jq >/dev/null || { [ "${1:-}" = pre-command ] || [ "${1:-}" = ask-edit ] && echo '{"decision":"allow"}'; exit 0; }   # Windows: winget install jqlang.jq
+#   antigravity.sh session-start | pre-command | pre-edit | post-edit | stop
+command -v jq >/dev/null || { case ${1:-} in pre-command|pre-edit) echo '{"decision":"allow"}' ;; esac; exit 0; }   # Windows: winget install jqlang.jq
 event=${1:-}
 input=$(cat)
 hooks=$(cd "$(dirname "$0")" && pwd)
@@ -27,6 +27,13 @@ case "$event" in
     reason=$(printf '%s' "$out" | jq -r '.hookSpecificOutput.permissionDecisionReason // empty' 2>/dev/null)
     if [ -n "$reason" ]; then jq -n --arg r "$reason" '{decision:"deny",reason:$r}'; else echo '{"decision":"allow"}'; fi
     ;;
+  pre-edit)
+    # write_to_file / replace_file_content / multi_replace_file_content → scope-fence.sh (the task's
+    # declared files); "deny" goes back to the agent with the reason, it never asks the owner.
+    out=$(jq --arg cwd "$root" '{cwd:$cwd, tool_input:{file_path:(.toolCall.args.TargetFile // "")}}' <<<"$input" | bash "$hooks/scope-fence.sh" pre)
+    reason=$(printf '%s' "$out" | jq -r '.hookSpecificOutput.permissionDecisionReason // empty' 2>/dev/null)
+    if [ -n "$reason" ]; then jq -n --arg r "$reason" '{decision:"deny",reason:$r}'; else echo '{"decision":"allow"}'; fi
+    ;;
   post-edit)
     # A formatter error cannot be reported back here (PostToolUse takes only {}); the stop check sees it.
     file=$(jq -r '.toolCall.args.TargetFile // empty' <<<"$input" | tr -d '\r')
@@ -47,11 +54,6 @@ case "$event" in
     else
       echo '{"decision":"stop"}'
     fi
-    ;;
-  ask-edit)
-    # Optional (off in .agents/hooks.json): every file edit waits for the owner's click,
-    # even when edits were set to «Always Allow».
-    echo '{"decision":"force_ask","reason":"Editing files needs the owner'"'"'s approval (AGENTS.md)."}'
     ;;
   *) echo '{}' ;;
 esac

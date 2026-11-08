@@ -42,7 +42,13 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 - {{FILL: project rules that came from incidents or the owner's decisions, each ending with
   `_Why: <reason> (<date>, <source>)._` Delete this bullet if there are none yet.}}
 - **One task at a time.** No drive-by refactoring; anything found outside the task goes to
-  `docs/plans/tech-debt.md` or a separate proposal.
+  `docs/plans/tech-debt.md` or a separate proposal. Before the first edit of a task write the files you
+  intend to change into `.tmp/scope` (one path or glob per line, `dir/` for a directory; the whole repository —
+  `*` — only for a task that truly spans it). The scope fence hook refuses an edit outside it and the stop hook
+  lists changed files outside it: undo the edit, or add the file to the scope deliberately and say so in the
+  report. State files (`PROGRESS.md`, `docs/plans/`, `docs/decisions.md`) are always editable. A new session
+  or a commit starts a new scope; a new task in the same session rewrites the file.
+  _Why: agents forgot this rule mid-task, started fixing unrelated things and finished neither._
 
 ## Solution sizing
 
@@ -150,10 +156,9 @@ per commit; the body explains why when not obvious. Run `make check` first.
   `allow_implicit_invocation: false`.
 - Hooks run in Claude Code (`.claude/settings.json`), Codex (`.codex/hooks.json`) and Antigravity
   (`.agents/hooks.json`, through `.claude/hooks/antigravity.sh`) — the same scripts in `.claude/hooks/`.
-  Its `ask-before-edit` hook (off by default; `"enabled": true` turns it on) makes every file edit
-  wait for the owner's approval. Codex loads project hooks only after the project and each hook are
-  trusted (`/hooks` in the Codex CLI; a changed hook needs review again). Subagents and the local
-  preview are Claude Code only. Agents without hooks follow the same rules by hand: `make check`
+  Gemini also reads `GEMINI.md` (on top of this file, which wins). Codex loads project hooks only after
+  the project and each hook are trusted (`/hooks` in the Codex CLI; a changed hook needs review again).
+  Subagents and the local preview are Claude Code only. Agents without hooks follow the same rules by hand: `make check`
   before claiming done.
 - **Session title.** When a session's topic clearly changes (it began with one question and ended in a plan, a feature
   or a different finding), retitle it the way the `session-title` skill says: Claude Code and Codex rename it

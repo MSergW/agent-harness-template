@@ -18,10 +18,20 @@ cd "$root" 2>/dev/null && [ -n "$root" ] || exit 0
 changed=$({ git diff --name-only HEAD; git ls-files --others --exclude-standard; } | sort -u)
 [ -z "$changed" ] && exit 0
 
+# The scope fence first: a file changed outside the task's declared scope is not done either.
+# It is not cached — the scope file can change while the diff does not.
+fence=""
+if [ -f .claude/hooks/scope-fence.sh ]; then
+  fence=$(jq -n --arg cwd "$root" '{cwd:$cwd}' | bash .claude/hooks/scope-fence.sh stop 2>&1 >/dev/null)
+fi
+
 cache=.claude/.stop-check
 sum=shasum; command -v sha1sum >/dev/null && sum=sha1sum   # macOS: shasum, Linux/Git Bash: sha1sum
 key=$({ git diff HEAD; git ls-files --others --exclude-standard -z | xargs -0 $sum 2>/dev/null; } | $sum | cut -d' ' -f1)
-[ "$(cat "$cache" 2>/dev/null)" = "$key" ] && exit 0
+if [ "$(cat "$cache" 2>/dev/null)" = "$key" ]; then   # these changes passed the checks already
+  [ -z "$fence" ] && exit 0
+  echo "$fence" >&2; exit 2
+fi
 
 errs=""
 add() { errs+="✗ $1"$'\n'; }
@@ -52,7 +62,8 @@ if [ -n "$errs" ]; then
     echo "$errs"
     echo "Fix the cause (never weaken tests). If these are the owner's changes, not yours, do not fix them — report them."
   } >&2
-  exit 2
 fi
-echo "$key" >"$cache"
+[ -z "$errs" ] && echo "$key" >"$cache"
+[ -n "$fence" ] && echo "$fence" >&2
+[ -n "$errs$fence" ] && exit 2
 exit 0
