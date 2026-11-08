@@ -42,7 +42,8 @@ Requirements: `git`, `bash`, [`jq`](https://jqlang.org) (used by hooks), [`ripgr
    ```bash
    ~/agent-harness-template/install.sh /path/to/your/project
    ```
-   For a small project (one binary, under ~5k lines, no web UI) add `--small`.
+   For a small project (one binary, under ~5k lines, no web UI) add `--small`. The template commit
+   is recorded in the project's `.harness-version` (commit it with the harness): updates start from it.
 3. Open the project in your agent and give it the whole of [FILL_PROMPT.md](FILL_PROMPT.md). It
    replaces every `{{FILL: …}}` marker with real content from your code, merges rules from older
    agent files, makes `make check` green and reports back. It also reads your past Claude Code and
@@ -82,6 +83,7 @@ through.
 | `REVIEW.md` | the diff review: what to look for (rules `make check` cannot see, correctness of the changed lines), what to ignore, at most two rounds |
 | `PROGRESS.md` | the current state for the next session (five latest entries, under 40 KB); older entries — `docs/progress/` by week |
 | `docs/decisions.md` | decisions not visible from the code, with their reasons |
+| `.harness-version` | the template commit the project was installed or last updated from (written by `install.sh`) |
 | `docs/plans/` | multi-session plans, tech debt, ideas |
 | `scripts/check.sh` | the single check behind `make check`: harness self-checks, Go/Node/Python by marker files, the project's own checks |
 | `.agents/skills/` | skills: `verify`, `handoff`, `depth` (four questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a command that goes red first, then hypotheses), `worktree` (a plan in its own git worktree, a small fix straight on the main branch), `audit` (code, security and UI audits; the finder never confirms its own finding) and `audit-fix` (triage of an audit), `git-commit`, `harness-refresh`, `session-title` (a title from what the session became; renames it where the tool allows) |
@@ -123,6 +125,39 @@ git config --global core.symlinks true              # needs Developer Mode (Sett
   (or is WSL's). So `.agents/hooks.json` starts them as a git shell alias:
   `git -c alias.harness-hook="!bash …" harness-hook <event>` — git is on `PATH` in `cmd` and `sh`
   alike, runs the alias in its own Git Bash and from the repository root.
+
+## Updating
+
+When the template improves, take its changes into a project that already has the harness:
+
+```bash
+git -C ~/agent-harness-template pull
+```
+
+```bash
+~/agent-harness-template/install.sh --update /path/to/your/project
+```
+
+Then give the agent the whole of [UPDATE_PROMPT.md](UPDATE_PROMPT.md).
+
+The update compares the template at the project's recorded commit with the template now, and touches
+only what changed between them:
+
+- new template files are copied;
+- a file the project never changed is replaced by the new version;
+- a file the project filled is not touched: `HARNESS_UPDATE.md` lists it with the template's own diff, and
+  the agent applies that change to the project's version (hook wiring in `settings.json`/`hooks.json`
+  included);
+- files removed or renamed in the template are listed for the agent to remove or move, with their references;
+- files the project deleted on purpose are not brought back;
+- files the template did not change are not listed at all.
+
+When the merge is done, the agent deletes `HARNESS_UPDATE.md` and runs `install.sh --done <project>`, which
+moves `.harness-version` to the new commit. Until then `make check` is red.
+
+A project installed before `.harness-version` existed has no record. `--update` then refuses and
+guesses the starting commit: the last template commit before the harness was first committed in the
+project. Confirm it with the owner, then run `install.sh --update <project> --from <commit>`.
 
 ## Keeping it alive
 

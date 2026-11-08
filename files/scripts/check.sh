@@ -50,6 +50,13 @@ left=$(git grep -nIF "$marker" -- . 2>/dev/null; git ls-files --others --exclude
 [ -z "$left" ] || fail "template markers left:
 $left" "fill them with real project content (or delete the line) — see the harness fill prompt"
 
+step "harness: unfinished update"
+# install.sh --update writes HARNESS_UPDATE.md and a «pending» line in .harness-version; both go away
+# only when the template's changes are merged (UPDATE_PROMPT.md) and install.sh --done has run.
+if [ -e HARNESS_UPDATE.md ] || grep -q '^pending ' .harness-version 2>/dev/null; then
+  fail "a harness template update is not finished" "merge HARNESS_UPDATE.md by the template's UPDATE_PROMPT.md, delete it, then run <template>/install.sh --done ."
+fi
+
 step "harness: module maps (warning)"
 # A directory with AGENTS.md has a module map. Its source changed but the map did not — a reminder,
 # not an error: update the map only when responsibility, contracts or constraints changed.

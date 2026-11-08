@@ -198,5 +198,5 @@ file or keep it as a one-line pointer to `AGENTS.md`.
    would change and in which file; numbered, so the owner can answer «take 1 and 3». Nothing from
    this list is in the files until the owner picks it.
 7. Commit only when the owner asks, separately from other work: formatting-only fixes in their own
-   commit, then the harness (`chore(agents): …` in the project language). After the commit, run
-   `make check` on a fresh clone (`git clone . <tmp>`).
+   commit, then the harness with `.harness-version` (`chore(agents): …` in the project language).
+   After the commit, run `make check` on a fresh clone (`git clone . <tmp>`).
