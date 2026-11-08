@@ -89,8 +89,11 @@ small subset; if you decide differently from what was installed, tell the owner 
 
 Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, `GLOSSARY.md`, skills or subagents (they are
 added later with the same names); delete from `AGENTS.md` the review paragraph of «Definition of
-done», the `depth` line of «Session start» and the «Domain terms» rule; from `CLAUDE.md` the `reviewer`,
-`depth`, `diagnose` and the «Token efficiency & delegation» block; keep `AGENTS.md` ~40–80 lines and
+done», the `depth` line of «Session start» and the «Domain terms» rule; from `CLAUDE.md` the skills line,
+the `reviewer` bullet and the «Token efficiency & delegation» block; in its «Commits» the branch rule
+keeps the steps (worktree first, then `git branch -d`; a pushed branch with `gh pr merge --delete-branch`)
+instead of the pointer to `git-commit`, and «Worktrees» and the `_AUDITS/` row of «Map» go (their skills
+are not installed); keep `AGENTS.md` ~40–80 lines and
 delete sections that would be empty.
 
 ## 4. Fill the files
@@ -98,7 +101,10 @@ delete sections that would be empty.
 - `AGENTS.md` — summary, hard rules (contracts first, each incident/decision rule with `_Why:_`),
   definition of done (the project's real layers), «Map» table, «Commands» (verified only),
   commit language, profile. ≤ ~150 lines. Relative links only — never `file:///` or `/Users/…`.
-- `CLAUDE.md` — skills/agents/preview actually present.
+- `CLAUDE.md` — project skills that run only on explicit request, the local preview; skills and
+  agents themselves are not listed there (their own descriptions are). In the full profile, detail
+  only some tasks need (deploy steps, worktrees, audits) goes into a skill, `AGENTS.md` keeping a
+  one-line pointer: every session reads `AGENTS.md` and `CLAUDE.md` whole.
 - `REVIEW.md` — «What to look for»: every hard rule of `AGENTS.md` that `make check` cannot see,
   written as what it looks like in a diff (a rule a check enforces is not repeated), and the traps of
   this stack (its database transactions, concurrency, calls to other systems); «What to ignore»
@@ -117,12 +123,19 @@ delete sections that would be empty.
   if it is not there; `.claude/settings.json` — add allow/ask/deny rules for this project's safe and
   dangerous commands and secret files.
 - Skills: fill `verify` (real layer-3 procedures) and `git-commit` (scope table from the directory
-  layout and `git log --format=%s | sort | uniq -c`, real examples). Add a project skill only for a
-  recurring task with rules not obvious from the code; symlink it into `.claude/skills/`.
-- Web UI: rename `.claude/agents/ui-verifier.md.example` to `<app>-verifier.md`, fill it, and create
+  layout and `git log --format=%s | sort | uniq -c`, real examples), `worktree` (the local files a
+  worktree needs and how it gets them). Add a project skill only for a recurring task with rules not
+  obvious from the code; symlink it into `.claude/skills/`.
+- Audit agents: fill `code-auditor` and `security-auditor` (the project line, the stack's traps, the
+  project's own security risks — from the code, past incidents and earlier audits); keep their fixed
+  coverage lists, an item that cannot apply gets «n/a» in the report, not a deletion.
+- Web UI: rename `.claude/agents/ui-verifier.md.example` to `<app>-verifier.md`, `ui-sweeper.md.example`
+  and `ui-auditor.md.example` to `ui-sweeper.md` and `ui-auditor.md`, fill them, and create
   `.claude/launch.json` from `launch.json.example` — the service on a throwaway database in an
   ignored directory (`.tmp/`), a test admin seeded from env or fixtures, never real data. No UI:
-  delete both `.example` files.
+  delete every `.example` file, the UI bullet of the `audit` skill, the paragraph on UI checks in
+  `verify`, and the other mentions of `ui-auditor` and UI findings (the `audit` description,
+  `report-format.md`, `code-auditor`, step 5 of `audit-fix`).
 
 ## 5. Module maps (full profile)
 

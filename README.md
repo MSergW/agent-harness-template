@@ -80,9 +80,9 @@ through.
 | `docs/decisions.md` | decisions not visible from the code, with their reasons |
 | `docs/plans/` | multi-session plans, tech debt, ideas |
 | `scripts/check.sh` | the single check behind `make check`: harness self-checks, Go/Node/Python by marker files, the project's own checks |
-| `.agents/skills/` | skills: `verify`, `handoff`, `depth` (four questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a command that goes red first, then hypotheses), `git-commit`, `harness-refresh`, `session-title` (a title from what the session became; renames it where the tool allows) |
+| `.agents/skills/` | skills: `verify`, `handoff`, `depth` (four questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a command that goes red first, then hypotheses), `worktree` (a plan in its own git worktree, a small fix straight on the main branch), `audit` (code, security and UI audits; the finder never confirms its own finding) and `audit-fix` (triage of an audit), `git-commit`, `harness-refresh`, `session-title` (a title from what the session became; renames it where the tool allows) |
 | `GLOSSARY.md` | the project's domain terms, one word per concept and the words to avoid; the reviewer flags the avoided ones |
-| `.claude/` | hooks (session state, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, an example UI verifier) |
+| `.claude/` | hooks (session state, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, `code-auditor`, `security-auditor`; examples for a web UI: a UI verifier, `ui-sweeper`, `ui-auditor`) |
 | `.codex/hooks.json` | the same hooks for Codex (without the formatter: `apply_patch` has no `file_path`). Codex runs project hooks only after you trust them: `/hooks` in the CLI |
 | `.agents/hooks.json` | the same hooks for Antigravity, through the adapter `.claude/hooks/antigravity.sh`; plus `ask-before-edit`, off by default: with `"enabled": true` every file edit waits for your click, even after «Always Allow» |
 

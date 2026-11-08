@@ -33,6 +33,14 @@ Needed when a change crosses components or touches something tests cannot reach:
 (in Claude Code — the `<app>-verifier` subagent); check the console, the interaction and a narrow
 viewport». «Playbooks / deploy: only on a test server — ask the owner». «Integration with X: …».}}
 
+UI checks run one after another, never in parallel (one browser pane, one local database), and only the main
+conversation hands work on (a subagent cannot start subagents). A verifier on a cheap model fits a step-by-step
+scenario on data that has every state it needs; give it a stronger model from the start (Claude Code: `model:` in the agent call) when a state exists only
+in the code (a count above zero, a server error, a missing right) or the change crosses rights, server
+validation or several pages. Its `NOT CHECKED` steps go to a second run on a stronger model, those steps only.
+Confirm its `FAIL` in the main conversation (code, or one look in the browser) before it counts: a cheap model also
+reports behaviour the scenario does not describe. A full audit of a section — the `audit` skill.
+
 ## Report
 
 Say what was verified and how (command, preview, server), and explicitly what was not verified.

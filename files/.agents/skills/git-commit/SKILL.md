@@ -59,4 +59,13 @@ Examples from this repo's history: {{FILL: 2–3 real subjects}}.
 Review `git diff --cached`, commit, then `git status` again. Report the hashes and subjects. Do not
 amend, rebase, force, push or clean files unless the user asked for exactly that. A commit request
 is not a push request; if push is asked, push the current branch normally and report the result.
-A branch or worktree made for a task is deleted once its commits are merged (`AGENTS.md` «Commits»).
+
+## 6. Branches and worktrees
+
+- A branch made for a task is deleted once applied: after its commits are merged into the base, remove
+  its worktree (if any) and the local branch (`git branch -d`); a pushed branch is deleted together with
+  the merge (`gh pr merge --delete-branch`). Never delete an unmerged branch or one the agent did not
+  create. _Why: no stale branches or worktrees in git._
+- A worktree holds its branch: git refuses to delete a branch checked out in a worktree, so the worktree
+  goes first (`git worktree remove <path>`, then `git branch -d`). A session working in a worktree of its
+  own ends with its work in commits (or a patch) and says so.

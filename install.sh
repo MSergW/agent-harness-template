@@ -60,7 +60,9 @@ for pat in '.claude' '.claude/' '.claude/*' '.agents' '.agents/' '.agents/*' '.c
     notes+=(".gitignore: '$pat' was ignored — commented out, the harness must be in git")
   fi
 done
-for pat in '.claude/settings.local.json' '.claude/.stop-check' '.tmp/'; do
+ignore=('.claude/settings.local.json' '.claude/.stop-check' '.tmp/')
+[ "$profile" = small ] || ignore+=('_AUDITS/')   # audit reports; the small profile has no audit skill
+for pat in "${ignore[@]}"; do
   grep -qF "$pat" "$gi" || { printf '%s%s' "$pat" "$eol" >>"$gi"; notes+=(".gitignore: added $pat"); }
 done
 
