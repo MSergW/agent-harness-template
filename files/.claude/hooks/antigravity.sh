@@ -22,9 +22,15 @@ case "$event" in
     jq -n --arg m "$out" '{injectSteps:[{systemMessage:{systemMessage:$m}}]}'
     ;;
   pre-command)
-    # run_command → prefer-rg.sh; "allow" hands the call on to the user's own approval settings.
-    out=$(jq '{tool_input:{command:(.toolCall.args.CommandLine // "")}}' <<<"$input" | bash "$hooks/prefer-rg.sh")
-    reason=$(printf '%s' "$out" | jq -r '.hookSpecificOutput.permissionDecisionReason // empty' 2>/dev/null)
+    # run_command → prefer-rg.sh, then no-pgrep-wait.sh; the first deny wins. "allow" hands the call on to the
+    # user's own approval settings.
+    cmd=$(jq '{tool_input:{command:(.toolCall.args.CommandLine // "")}}' <<<"$input")
+    reason=""
+    for h in prefer-rg no-pgrep-wait; do
+      out=$(printf '%s' "$cmd" | bash "$hooks/$h.sh")
+      reason=$(printf '%s' "$out" | jq -r '.hookSpecificOutput.permissionDecisionReason // empty' 2>/dev/null)
+      [ -z "$reason" ] || break
+    done
     if [ -n "$reason" ]; then jq -n --arg r "$reason" '{decision:"deny",reason:$r}'; else echo '{"decision":"allow"}'; fi
     ;;
   pre-edit)

@@ -10,7 +10,10 @@ Done means runnable evidence, not confidence.
 ## Layers 1–2: `make check`
 
 Run `make check` (in Claude Code prefer the `checker` subagent). It stops at the first red layer and
-prints «What to do» for each failure. Red → the work is not done: fix the cause, never weaken or
+prints «What to do» for each failure. `CHECK_CACHED=1 make check` passes at once when the tree is the same as at
+the last fully green run (before a deploy, after a commit of checked work); it skips network checks too, so a plain
+`make check` is the one that counts for new work. Over 25 minutes it stops with exit 124: find what hangs, never
+re-run it with a bigger limit. Red → the work is not done: fix the cause, never weaken or
 delete a test, never disable a check. A warning about a module map means: update the map if the
 module's responsibility, contracts or constraints changed.
 
@@ -20,8 +23,8 @@ known environment caveats (e.g. tests that need network or a sandbox exception).
 ## Review of the diff
 
 Together with `make check` and before layer 3: the review of the diff in a fresh context by
-`REVIEW.md` (Claude Code: the `reviewer` subagent; another tool: a new session given the same
-inputs) — the task in a few sentences and the paths of the change. Block findings are fixed and go
+`REVIEW.md` (Claude Code: the `reviewer` subagent; Gemini in Antigravity: its own subagent given
+`.claude/agents/reviewer.md`, `GEMINI.md`; another tool: a new session given the same inputs) — the task in a few sentences and the paths of the change. Block findings are fixed and go
 back through `make check`, then the second round gets the first round's findings and what was done.
 At most two rounds; what is still open goes to the owner with the change. «Pre-existing» findings
 go to `docs/plans/tech-debt.md`, not into this change.

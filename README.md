@@ -79,18 +79,18 @@ through.
 |---|---|
 | `AGENTS.md` | the main instructions for every agent: hard rules, definition of done, map, commands |
 | `CLAUDE.md` | `@AGENTS.md` plus what exists only in Claude Code (hooks, skills, subagents) |
-| `GEMINI.md` | a short addendum for Gemini (Antigravity) on top of `AGENTS.md`: declare the scope, look for parallel work in other worktrees and branches, search wider than the task's examples, «not verified» instead of unchecked claims, no polling, a four-part report |
-| `REVIEW.md` | the diff review: what to look for (rules `make check` cannot see, correctness of the changed lines), what to ignore, at most two rounds |
+| `GEMINI.md` | imports `AGENTS.md` and adds for Gemini (Antigravity): declare the scope, look for parallel work in other worktrees and branches, search wider than the task's examples, «not verified» instead of unchecked claims, no polling, the diff review in its own subagent, a four-part report |
+| `REVIEW.md` | the diff review: what to look for (rules `make check` cannot see, more code than the task needs, the owner's principles, correctness of the changed lines), settling a doubt by running it in a temp copy, what to ignore, at most two rounds |
 | `PROGRESS.md` | the current state for the next session (five latest entries, under 40 KB); older entries — `docs/progress/` by week |
 | `docs/decisions.md` | decisions not visible from the code, with their reasons |
 | `.harness-version` | the template commit the project was installed or last updated from (written by `install.sh`) |
-| `docs/plans/` | multi-session plans, tech debt, ideas |
-| `scripts/check.sh` | the single check behind `make check`: harness self-checks, Go/Node/Python by marker files, the project's own checks |
+| `docs/plans/` | multi-session plans (attacked by `plan-critic` before step 1), tech debt, ideas, what the review missed (`review-misses.md`) |
+| `scripts/check.sh` | the single check behind `make check`: harness self-checks, a secret scan, Go/Node/Python by marker files, the project's own checks; a 25-minute bound when not run in a terminal; `CHECK_CACHED=1` skips a tree that already passed |
 | `.agents/skills/` | skills: `verify`, `handoff`, `depth` (four questions before a big task, open decisions in rounds), `diagnose` (a bug of unknown cause: a command that goes red first, then hypotheses), `worktree` (a plan in its own git worktree, a small fix straight on the main branch), `audit` (code, security and UI audits; the finder never confirms its own finding) and `audit-fix` (triage of an audit), `git-commit`, `harness-refresh`, `session-title` (a title from what the session became; renames it where the tool allows) |
 | `GLOSSARY.md` | the project's domain terms, one word per concept and the words to avoid; the reviewer flags the avoided ones |
-| `.claude/` | hooks (session state, the scope fence before an edit, formatter after an edit, checks before finishing, `rg` instead of `grep`) and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `committer`, `code-auditor`, `security-auditor`; examples for a web UI: a UI verifier, `ui-sweeper`, `ui-auditor`) |
-| `.codex/hooks.json` | the same hooks for Codex (without the formatter: `apply_patch` has no `file_path`). Codex runs project hooks only after you trust them: `/hooks` in the CLI |
-| `.agents/hooks.json` | the same hooks for Antigravity, through the adapter `.claude/hooks/antigravity.sh` |
+| `.claude/` | hooks (session state, the scope fence before an edit, formatter after an edit, checks before finishing, `rg` instead of `grep`, read-only subagents kept read-only, a time limit on background commands, no wait loops on `pgrep -f`), a deny on force push, and subagents (`checker`, `log-reader`, `docs-sync`, `reviewer`, `plan-critic`, `committer`, `code-auditor`, `security-auditor`; examples for a web UI: a UI verifier, `ui-sweeper`, `ui-auditor`) |
+| `.codex/hooks.json` | the same hooks for Codex (without the formatter: `apply_patch` has no `file_path`; without the subagent and background guards, which are Claude Code's). Codex runs project hooks only after you trust them: `/hooks` in the CLI |
+| `.agents/hooks.json` | the same hooks for Antigravity, through the adapter `.claude/hooks/antigravity.sh` (no subagent or background guards) |
 
 A small project gets only `AGENTS.md`, `CLAUDE.md`, `scripts/check.sh`, the hooks and tech debt; the
 rest is added later under the same names when the project grows.
@@ -100,6 +100,11 @@ rest is added later under the same names when the project grows.
 `multi_replace_file_content`); a file changed by a shell command (`sed -i`, a generator) is caught only by the
 stop hook, after the fact, and only once per reply (it never blocks twice in a row). A file you change in your
 editor during the agent's session counts as the agent's. The template's test: `bash tests/scope-fence.sh`.
+
+**Guard limits.** The read-only guard (`readonly-agents.py`, Claude Code only, needs `python3`) catches mistakes,
+not an agent set on getting around it: a command it cannot classify is refused, and an interpreter run by the
+reviewer or an auditor (a probe in a temp copy) can still write anywhere. Its cases: `bash tests/readonly-agents.sh`;
+the wait guards: `bash tests/wait-guards.sh`.
 
 Agent-only files are in English; human-facing files (`PROGRESS.md`, plans, decisions, commit
 messages) are written in your project's language when the template is filled.

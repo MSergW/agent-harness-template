@@ -48,7 +48,9 @@ never regenerate them. Human-facing files stay in the project language; agent-on
   - **navigation** — the agent searched long for a file or a fact: a pointer in a map or `AGENTS.md`;
   - **automated checks** — a mistake a check could have caught; a check that exists but is not wired
     into `make check` or is silently broken is the finding, not a new one;
-  - **review** — a mistake the reviewer let through: a line in `REVIEW.md`;
+  - **review** — a mistake the reviewer let through (the rows of `docs/plans/review-misses.md` first): a line in
+    `REVIEW.md` or a check; delete the rows handled (git keeps them). New decisions in the window that show a
+    principle the owner's principles in `REVIEW.md` lack: propose it to the owner, never add it unasked;
   - **steering size** — rules in `AGENTS.md` that belong in a check, `REVIEW.md`, a module map or a skill;
   - **no-ops** — instructions that change nothing the agent does: delete them;
   - **tool economy** — expensive calls repeated (whole files, long outputs in the main context, many
@@ -84,17 +86,41 @@ never regenerate them. Human-facing files stay in the project language; agent-on
 - Hooks use the real format (`SessionStart`, `PreToolUse`, `PostToolUse`, `Stop`) and point at
   existing scripts; run each script once by hand.
 - Subagents have `tools:` / `disallowedTools:` and alias models (`haiku`, `sonnet`); their commands,
-  preview names and test accounts still match the project.
+  preview names and test accounts still match the project. Every read-only one is in `GUARDED` of
+  `.claude/hooks/readonly-agents.py` (a `*-verifier` is matched by name), and the project commands it needs
+  (`MAKE_TARGETS`, a validator) pass that hook.
 
-## 7. Size, profile and cold start
+## 7. Skill ablation (one skill per refresh, only with the owner's yes)
 
-- Root `AGENTS.md` ≤ ~150 lines; move detail into skills, module maps or `docs/`.
+Instructions written for an earlier model can go stale: the current one may do as well, or better, without them.
+
+- Pick the candidate by cost: size × uses (Claude Code: Skill calls in the window's sessions,
+  `rg -o --no-filename '"name":"Skill","input":\{"skill":"[a-z:-]+' <sessions>/*.jsonl | sort | uniq -c`).
+- Pick a past task the skill served: a finished commit whose original request is recorded (a removed row of
+  `ideas.md`, a plan step). Detached worktrees at its parent (`git worktree add --detach <scratch>/with-1 <commit>^`,
+  likewise `with-2`, `without-1`, `without-2`).
+- Two implementers per side, same model and brief, in parallel: «with» reads the skill first, «without» is forbidden
+  to read `.agents/skills/` or use a skill tool. All settle open questions themselves; narrow checks only; no commits.
+  One per side is not enough — the model's spread outweighs the skill. Record tokens and minutes per side too: a skill
+  that changes no score but cuts exploration still earns its place.
+- A blind judge (the strongest model, fresh context) gets the diffs under neutral letters (random order, recorded)
+  and the owner's commit as the accepted reference, and scores each against `REVIEW.md`, the hard rules and the
+  skill's own rules: defects with a scenario, missed requirements, convention breaks. It never learns which side had
+  the skill.
+- Verdict: «without» not worse → propose to the owner to cut the skill to what the «without» side got wrong, or to
+  delete it; «with» clearly better → keep it, and record which rules made the difference. One task is a sample of one:
+  a cut needs two trials that agree. Results — a row in `docs/decisions.md`. Remove the worktrees afterwards.
+
+## 8. Size, profile and cold start
+
+- Root `AGENTS.md` ≤ ~150 lines and only what every session needs before its first step: a procedure moves into a
+  skill, what one module or function does into its map or doc comment, user-facing detail into `docs/`.
 - A small-profile repo that now has multi-session work or grew past ~5k lines / got a UI gets the
   missing parts of the standard layout, with the standard names.
 - Cold-start test: from `AGENTS.md` and its links alone, a new agent can tell the current task, how
   to verify it and what «done» means.
 
-## 8. Finish
+## 9. Finish
 
 - `make check` green, also on a fresh clone (`git clone . <tmp>` and run it there).
 - Report to the owner in their language: what drifted and how it was fixed, commands that broke,

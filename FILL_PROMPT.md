@@ -91,7 +91,8 @@ small subset; if you decide differently from what was installed, tell the owner 
 
 Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, `GLOSSARY.md`, skills or subagents (they are
 added later with the same names); delete from `AGENTS.md` the review paragraph of «Definition of
-done», the `depth` line of «Session start» and the «Domain terms» rule; from `CLAUDE.md` the skills line,
+done», the `depth` and `diagnose` lines of «Session start» and the «Domain terms» rule; from `GEMINI.md` the
+«Review the diff» bullet; from `CLAUDE.md` the skills line,
 the `reviewer` bullet and the «Token efficiency & delegation» block; in its «Commits» the branch rule
 keeps the steps (worktree first, then `git branch -d`; a pushed branch with `gh pr merge --delete-branch`)
 instead of the pointer to `git-commit`, and «Worktrees» and the `_AUDITS/` row of «Map» go (their skills
@@ -110,7 +111,9 @@ delete sections that would be empty.
 - `REVIEW.md` — «What to look for»: every hard rule of `AGENTS.md` that `make check` cannot see,
   written as what it looks like in a diff (a rule a check enforces is not repeated), and the traps of
   this stack (its database transactions, concurrency, calls to other systems); «What to ignore»
-  names the real formatters and linters. Keep the rest (scope, findings, two rounds) as it is.
+  names the real formatters and linters. The owner's principles: only those the owner states or confirms
+  (from `docs/decisions.md` or past sessions, proposed to the owner first) — otherwise delete that paragraph.
+  Keep the rest (scope, findings, settling a doubt by running it, two rounds) as it is.
 - `GLOSSARY.md` — the project's own terms from the UI, docs, code names and the owner's decisions (and
   past sessions' corrections of a word), each with the words to avoid; the rules comment at the top stays
   English. Few or none found — keep only the headings.
@@ -120,14 +123,22 @@ delete sections that would be empty.
 - `scripts/check.sh` — keep the harness self-checks; check that the auto-detected stack sections fit
   (Go/Node/Python switch on by marker files); add the project's own static and behaviour checks;
   delete sections that cannot apply; translate the user-visible messages into the project language.
+  The secret scan: add the files «Do not touch» names as secret (key or vault files) to `secret_paths`; a test
+  directory with made-up tokens that the exclusions miss gets its own `':!<path>'`.
 - `.claude/hooks/stop-check.sh` — add quick checks keyed on changed paths (templates → their tests,
   UI → UI unit tests, configs → validator); `.claude/hooks/format.sh` — add the project's formatter
   if it is not there; `.claude/settings.json` — add allow/ask/deny rules for this project's safe and
-  dangerous commands and secret files.
+  dangerous commands and secret files. `.claude/hooks/readonly-agents.py` — `MAKE_TARGETS` holds the project's
+  read and test targets, and every check a read-only agent runs (a validator, a project CLI with a dry-run
+  flag) passes it: try them with `bash <template>/tests/readonly-agents.sh` as a model, or by hand
+  (`echo '{"agent_type":"checker","tool_name":"Bash","tool_input":{"command":"<cmd>"}}' | python3 .claude/hooks/readonly-agents.py`
+  prints nothing when allowed).
 - Skills: fill `verify` (real layer-3 procedures) and `git-commit` (scope table from the directory
   layout and `git log --format=%s | sort | uniq -c`, real examples), `worktree` (the local files a
   worktree needs and how it gets them). Add a project skill only for a recurring task with rules not
   obvious from the code; symlink it into `.claude/skills/`.
+- `plan-critic`: its lenses (keep data / ops / users or fit them to the domain) and where real data can be read
+  safely.
 - Audit agents: fill `code-auditor` and `security-auditor` (the project line, the stack's traps, the
   project's own security risks — from the code, past incidents and earlier audits); keep their fixed
   coverage lists, an item that cannot apply gets «n/a» in the report, not a deletion.

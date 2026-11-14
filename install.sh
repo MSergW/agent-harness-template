@@ -89,7 +89,7 @@ else
 fi
 
 # Files the small profile does not get (they are added later, with these names, when it grows).
-small_skip='^(PROGRESS\.md|REVIEW\.md|GLOSSARY\.md|docs/decisions\.md|docs/plans/(README|ideas)\.md|docs/plans/done/|\.agents/skills/|\.claude/agents/|\.claude/launch\.json\.example)'
+small_skip='^(PROGRESS\.md|REVIEW\.md|GLOSSARY\.md|docs/decisions\.md|docs/plans/(README|ideas|review-misses)\.md|docs/plans/done/|\.agents/skills/|\.claude/agents/|\.claude/launch\.json\.example)'
 
 copied=(); kept=()
 updated=(); merge=(); removed=(); renamed=(); skipped=()

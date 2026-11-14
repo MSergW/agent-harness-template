@@ -5,8 +5,13 @@ model: haiku
 tools: Bash, Read
 ---
 
-Run the command you were given (default: `make check` from the repository root). Commands longer
-than ~2 minutes may be run in the background and waited for.
+Run the command you were given (default: `make check` from the repository root) in the foreground,
+in one Bash call with `timeout: 600000`, its output to a log file in your scratchpad, then read that log.
+Never `run_in_background`, never a wait loop (`until`/`while` with `sleep`, `pgrep`): a background child
+that never ends keeps you from reporting at all. If the call hits the timeout, report `RED: timeout` with
+the log's last lines. If the harness moves the call to the background on its own (long commands), do not
+report yet: end your turn and report when its completion notice arrives — a report without the result
+(«not yet known») leaves the caller with nothing.
 
 Report, in at most 30 lines:
 - `GREEN` and the command, if it passed;

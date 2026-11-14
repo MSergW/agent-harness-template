@@ -21,9 +21,11 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
    (agents without the hook: the same parts). Read further only the section the task needs
    (`rg -n '^## ' PROGRESS.md`), never the whole file; older entries — `rg` over `docs/progress/`.
 3. For multi-step work, open the active plan in `docs/plans/`.
-   Before a new plan or a feature across several modules, run the `depth` skill (four questions).
-4. Before changing code run `make check`. If the baseline is red, tell the owner and fix it first
-   (with their consent) instead of stacking new work on top.
+   Before a new plan or a feature across several modules, run the `depth` skill (four questions); for a bug or a
+   slowdown whose cause is not known, the `diagnose` skill.
+4. Before changing code, run `make check` when the baseline is unknown — at the start of a plan, or when the last
+   commit's check is not known green; a plan's next step relies on the previous step's check. If the baseline is
+   red, tell the owner and fix it first (with their consent) instead of stacking new work on top.
 
 ## Hard rules
 
@@ -90,6 +92,13 @@ If a change alters a module's responsibility, contracts or constraints, update i
   review round, not a new full cycle.
 - **Short outputs:** pipe through `rg`/`head`/`tail` or a summary; long logs and wide reading go to a subagent where
   there is one; edit with short unique fragments, not scripts repeating whole paragraphs.
+- **Every wait has a bound.** Never end a turn waiting on something that may not end: a background command starts
+  with `timeout <seconds>`; a script of your own that loops (a fix loop) has a pass limit and an exit; no wait loop
+  on `pgrep -f` (it matches its own shell). A command that hit its limit is a finding — find why it hung, never just
+  re-run it with a bigger limit. _Why: a session waiting on a command that never ends hangs until someone notices._
+- **Thinking is billed too.** Think to choose, not to write: never restate the request, never draft code or the reply
+  in thinking (write it once, in the answer or the edit), never re-check a draft there. Long thought only where it
+  pays: a cause not yet known, code that must be read first, a design choice.
 
 _Why: every reply re-reads the whole context, so a long session costs more with each turn, and a full check after
 every small edit is slow. A new session is not free either: it re-reads the project before its first edit._
@@ -156,9 +165,10 @@ per commit; the body explains why when not obvious. Run `make check` first.
   `allow_implicit_invocation: false`.
 - Hooks run in Claude Code (`.claude/settings.json`), Codex (`.codex/hooks.json`) and Antigravity
   (`.agents/hooks.json`, through `.claude/hooks/antigravity.sh`) — the same scripts in `.claude/hooks/`.
-  Gemini also reads `GEMINI.md` (on top of this file, which wins). Codex loads project hooks only after
+  Gemini reads `GEMINI.md`, which imports this file (this file wins). Codex loads project hooks only after
   the project and each hook are trusted (`/hooks` in the Codex CLI; a changed hook needs review again).
-  Subagents and the local preview are Claude Code only. Agents without hooks follow the same rules by hand: `make check`
+  Subagents are Claude Code's (Gemini in Antigravity runs the review in its own subagent, `GEMINI.md`); the local
+  preview is Claude Code only. Agents without hooks follow the same rules by hand: `make check`
   before claiming done.
 - **Session title.** When a session's topic clearly changes (it began with one question and ended in a plan, a feature
   or a different finding), retitle it the way the `session-title` skill says: Claude Code and Codex rename it
@@ -167,4 +177,5 @@ per commit; the body explains why when not obvious. Run `make check` first.
 ## Evolving these rules
 
 Turn a mistake that happened twice into a mechanical check in `scripts/check.sh` rather than another
-paragraph here. Keep this file under ~150 lines.
+paragraph here. This file holds only what every session needs; a procedure goes into a skill, what one module or
+function does into its map or doc comment. Keep this file under ~150 lines.

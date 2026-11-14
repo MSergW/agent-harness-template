@@ -28,6 +28,9 @@ The files below are human-facing — write them in the project language (see `AG
    and what was not. Details live in the commits; never retell the work.
 4. New owner decisions not visible from code → `docs/decisions.md` with the reason.
 5. Deferred work or findings outside the task → a row in `docs/plans/tech-debt.md`.
+   A defect the owner found in their check after the change had passed the review → a row in
+   `docs/plans/review-misses.md` (what, why the review missed it, the lesson): the owner's check is the
+   review's shadow, and where the two differ, the review gets tuned (the `harness-refresh` skill).
 6. Commit only when asked, and only a feature the owner has tried (skill `git-commit`). Until then
    the work stays uncommitted and `PROGRESS.md` says so — no commit offered while it is being
    built or checked.

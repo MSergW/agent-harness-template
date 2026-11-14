@@ -15,6 +15,10 @@
       "Bash(git push:*)"
     ],
     "deny": [
+      "Bash(git push --force:*)",
+      "Bash(git push -f:*)",
+      "Bash(git push * --force:*)",
+      "Bash(git push * -f:*)",
       "Read(./.env)",
       "Read(./**/.env)"
     ]
@@ -29,9 +33,22 @@
     ],
     "PreToolUse": [
       {
+        "matcher": "Edit|Write|MultiEdit|NotebookEdit|Bash|Monitor",
+        "hooks": [
+          { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/readonly-agents.py\"", "timeout": 5 }
+        ]
+      },
+      {
         "matcher": "Bash",
         "hooks": [
-          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/prefer-rg.sh\"", "timeout": 5 }
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/prefer-rg.sh\"", "timeout": 5 },
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/background-timeout.sh\"", "timeout": 5 }
+        ]
+      },
+      {
+        "matcher": "Bash|Monitor",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/no-pgrep-wait.sh\"", "timeout": 5 }
         ]
       },
       {
