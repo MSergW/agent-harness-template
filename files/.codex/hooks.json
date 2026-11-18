@@ -25,6 +25,11 @@
             "type": "command",
             "command": "root=$(git rev-parse --show-toplevel 2>/dev/null || pwd); CLAUDE_PROJECT_DIR=\"$root\" bash \"$root/.claude/hooks/no-pgrep-wait.sh\"",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "root=$(git rev-parse --show-toplevel 2>/dev/null || pwd); CLAUDE_PROJECT_DIR=\"$root\" HOOK_ASK_AS_DENY=1 python3 \"$root/.claude/hooks/git-guard.py\"",
+            "timeout": 5
           }
         ]
       },

@@ -32,6 +32,26 @@ concretely for this task — no generic advice:
 
 Then restate the task in one paragraph: the goal, what it starts from, how it is done, how it is verified.
 
+**Attack the idea before the plan** (only when a plan in `docs/plans/` will follow). The session that formed the idea
+judges it badly, so the attack goes to a fresh context, after the code is read (an idea without the code behind it is
+attacked blind) and before any step is written (Claude Code: the `plan-critic` agent; elsewhere a fresh session given
+`.claude/agents/plan-critic.md`):
+
+1. Write the idea to `_DOCS/temp/<plan topic>/idea.md`, up to ~20 lines in the project language: the goal, the model
+   (entities, tables, who owns what), the flow from the person's first action to the result, what is reused, what is
+   left out. Not the four answers, not your reasoning — the attacker must judge the idea, not be led to your
+   conclusion.
+2. One `plan-critic` in **idea** mode with that path only (not the discussion, not your doubts).
+3. Its arguments: a fact it got wrong — drop it with the evidence (`file:line`, a query); everything else — to the
+   owner together with the four answers, each as a question «keep the idea or take <the other>?» with your
+   recommendation. A model change is the owner's decision, never yours.
+4. The report and the owner's answers go verbatim to a section «Idea attack» at the top of the plan's critics file
+   (`_DOCS/temp/<plan topic>/critics-<date>.md`, the `plan-steps` skill); the outcome in one line to the plan's «Depth».
+
+_Why: critics of written plans find the wrong details but not the wrong idea (in a real project a model was rebuilt
+after four steps, and a missing clean-up came the day after the merge); once steps are written, the idea is costly to
+change._
+
 - Show the answers and the restated task to the owner in their language, short (up to ~10 lines), **before
   the work starts** — before the first code edit or the plan — and wait for the owner's word on the
   «optional» proposals; with none, go on without waiting. _Why: answers shown only in the final report come

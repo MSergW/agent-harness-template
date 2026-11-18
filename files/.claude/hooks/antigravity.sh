@@ -22,12 +22,15 @@ case "$event" in
     jq -n --arg m "$out" '{injectSteps:[{systemMessage:{systemMessage:$m}}]}'
     ;;
   pre-command)
-    # run_command → prefer-rg.sh, then no-pgrep-wait.sh; the first deny wins. "allow" hands the call on to the
-    # user's own approval settings.
-    cmd=$(jq '{tool_input:{command:(.toolCall.args.CommandLine // "")}}' <<<"$input")
+    # run_command → prefer-rg.sh, no-pgrep-wait.sh, then git-guard.py (its «ask» is a deny here: no prompt from a
+    # hook); the first deny wins. "allow" hands the call on to the user's own approval settings.
+    cmd=$(jq --arg cwd "$root" '{cwd:$cwd, tool_input:{command:(.toolCall.args.CommandLine // "")}}' <<<"$input")
     reason=""
-    for h in prefer-rg no-pgrep-wait; do
-      out=$(printf '%s' "$cmd" | bash "$hooks/$h.sh")
+    for h in prefer-rg.sh no-pgrep-wait.sh git-guard.py; do
+      case $h in
+        *.py) command -v python3 >/dev/null || continue; out=$(printf '%s' "$cmd" | HOOK_ASK_AS_DENY=1 python3 "$hooks/$h") ;;
+        *) out=$(printf '%s' "$cmd" | bash "$hooks/$h") ;;
+      esac
       reason=$(printf '%s' "$out" | jq -r '.hookSpecificOutput.permissionDecisionReason // empty' 2>/dev/null)
       [ -z "$reason" ] || break
     done

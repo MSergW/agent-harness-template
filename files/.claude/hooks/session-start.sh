@@ -5,13 +5,15 @@
 cwd=$(jq -r '.cwd // empty' <<<"${input:-}" 2>/dev/null | tr -d '\r')
 cd "${cwd:-${CLAUDE_PROJECT_DIR:-.}}" || exit 0
 cd "$(git rev-parse --show-toplevel 2>/dev/null || pwd)" || exit 0
+# A new worktree lacks the local files git does not carry (the `worktree` skill, «Local files»).
+[ -f scripts/worktree-links.sh ] && bash scripts/worktree-links.sh 2>&1
 echo "Branch: $(git branch --show-current)"
 echo "Recent commits:"
 git log --oneline -5 | sed 's/^/  /'
 status=$(git status --short)
 if [ -n "$status" ]; then
-  echo "Uncommitted changes (treat as the owner's unless you made them):"
-  echo "$status" | head -20 | sed 's/^/  /'
+  echo "Uncommitted changes, $(echo "$status" | wc -l | tr -d ' ') files (treat as the owner's unless you made them):"
+  echo "$status" | head -5 | sed 's/^/  /'
 fi
 # A new task: the scope fence drops the old scope and records the owner's uncommitted work as its baseline.
 if [ -f .claude/hooks/scope-fence.sh ]; then

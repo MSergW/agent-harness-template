@@ -53,6 +53,11 @@ if [ -n "$pyfiles" ] && command -v ruff >/dev/null; then
   out=$(ruff check $pyfiles 2>&1) || add "ruff:"$'\n'"$(head -20 <<<"$out")"
 fi
 
+# Hook scripts: their stop and pass cases (the same step runs in make check).
+if grep -qE '^\.claude/hooks/' <<<"$changed" && [ -f .claude/hooks/test_hooks.py ] && command -v python3 >/dev/null; then
+  out=$(python3 .claude/hooks/test_hooks.py 2>&1) || add "hook tests:"$'\n'"$(head -20 <<<"$out")"
+fi
+
 # {{FILL: project-specific quick checks keyed on changed paths (templates → their tests, UI → UI unit
 # tests, configs → validator, playbooks → --syntax-check) — or delete this comment.}}
 

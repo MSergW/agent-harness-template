@@ -25,6 +25,7 @@ why=$(printf '%s' "$cmd" | perl -0777 -ne '
   if ($bare =~ /;|&&|\|\||\n|&/) { print "a command after `;`, `&&`, `||`, `&` or a new line runs without the limit"; exit }
   print "ok"')
 [ "$why" = ok ] && exit 0
+printf '%s' "$input" | bash "$(dirname "$0")/journal.sh" background-timeout deny
 jq -n --arg why "$why" '{hookSpecificOutput:{hookEventName:"PreToolUse",permissionDecision:"deny",
 permissionDecisionReason:("A background command needs a time limit (refused: " + $why + "): start it with `timeout <seconds>` (at most 1800), e.g. `timeout 900 make check > <scratch dir>/check.log 2>&1` (a literal path: variables do not carry over between calls), or for several commands `timeout 900 bash -c '"'"'…'"'"'`. On expiry it exits 124 and you are notified: then find why it hung instead of re-running it. A script of your own that loops (a fix loop) also needs a pass limit and an exit.")}}'
 exit 0

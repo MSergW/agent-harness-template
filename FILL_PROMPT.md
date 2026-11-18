@@ -93,7 +93,7 @@ Small profile: no `PROGRESS.md`, decisions, plans, `REVIEW.md`, `GLOSSARY.md`, s
 added later with the same names); delete from `AGENTS.md` the review paragraph of «Definition of
 done», the `depth` and `diagnose` lines of «Session start» and the «Domain terms» rule; from `GEMINI.md` the
 «Review the diff» bullet; from `CLAUDE.md` the skills line,
-the `reviewer` bullet and the «Token efficiency & delegation» block; in its «Commits» the branch rule
+the «A new session» and `reviewer` bullets and the «Token efficiency & delegation» block; in its «Commits» the branch rule
 keeps the steps (worktree first, then `git branch -d`; a pushed branch with `gh pr merge --delete-branch`)
 instead of the pointer to `git-commit`, and «Worktrees» and the `_AUDITS/` row of «Map» go (their skills
 are not installed); keep `AGENTS.md` ~40–80 lines and
@@ -113,7 +113,7 @@ delete sections that would be empty.
   this stack (its database transactions, concurrency, calls to other systems); «What to ignore»
   names the real formatters and linters. The owner's principles: only those the owner states or confirms
   (from `docs/decisions.md` or past sessions, proposed to the owner first) — otherwise delete that paragraph.
-  Keep the rest (scope, findings, settling a doubt by running it, two rounds) as it is.
+  Keep the rest (scope, findings, settling a doubt by running it, rounds) as it is.
 - `GLOSSARY.md` — the project's own terms from the UI, docs, code names and the owner's decisions (and
   past sessions' corrections of a word), each with the words to avoid; the rules comment at the top stays
   English. Few or none found — keep only the headings.
@@ -128,14 +128,18 @@ delete sections that would be empty.
 - `.claude/hooks/stop-check.sh` — add quick checks keyed on changed paths (templates → their tests,
   UI → UI unit tests, configs → validator); `.claude/hooks/format.sh` — add the project's formatter
   if it is not there; `.claude/settings.json` — add allow/ask/deny rules for this project's safe and
-  dangerous commands and secret files. `.claude/hooks/readonly-agents.py` — `MAKE_TARGETS` holds the project's
+  dangerous commands and secret files (`Read` and `Edit` denies). `.claude/hooks/git-guard.py` — `PROJECT_SECRETS`
+  holds the same secret files (key or vault files, `secrets.yml`; a `.env.<name>` without secrets that agents must
+  read goes to `ENV_NOT_SECRET`), each with a deny case in `PROJECT_CASES` of `.claude/hooks/test_hooks.py`; its
+  `make check` step must stay green. `.claude/hooks/readonly-agents.py` — `MAKE_TARGETS` holds the project's
   read and test targets, and every check a read-only agent runs (a validator, a project CLI with a dry-run
   flag) passes it: try them with `bash <template>/tests/readonly-agents.sh` as a model, or by hand
   (`echo '{"agent_type":"checker","tool_name":"Bash","tool_input":{"command":"<cmd>"}}' | python3 .claude/hooks/readonly-agents.py`
   prints nothing when allowed).
 - Skills: fill `verify` (real layer-3 procedures) and `git-commit` (scope table from the directory
   layout and `git log --format=%s | sort | uniq -c`, real examples), `worktree` (the local files a
-  worktree needs and how it gets them). Add a project skill only for a recurring task with rules not
+  worktree needs and how it gets them), `plan-steps` (the two language lines of a new session's brief, in the
+  owner's language). Add a project skill only for a recurring task with rules not
   obvious from the code; symlink it into `.claude/skills/`.
 - `plan-critic`: its lenses (keep data / ops / users or fit them to the domain) and where real data can be read
   safely.
@@ -145,8 +149,9 @@ delete sections that would be empty.
 - Web UI: rename `.claude/agents/ui-verifier.md.example` to `<app>-verifier.md`, `ui-sweeper.md.example`
   and `ui-auditor.md.example` to `ui-sweeper.md` and `ui-auditor.md`, fill them, and create
   `.claude/launch.json` from `launch.json.example` — the service on a throwaway database in an
-  ignored directory (`.tmp/`), a test admin seeded from env or fixtures, never real data. No UI:
-  delete every `.example` file, the UI bullet of the `audit` skill, the paragraph on UI checks in
+  ignored directory (`.tmp/`), a test admin seeded from env or fixtures, never real data; fill how the `prototype`
+  skill runs its variants (a launch entry on its own port). No UI: delete every `.example` file, the `prototype`
+  skill (`.agents/skills/prototype/` and its `.claude/skills/prototype` link), the UI bullet of the `audit` skill, the paragraph on UI checks in
   `verify`, and the other mentions of `ui-auditor` and UI findings (the `audit` description,
   `report-format.md`, `code-auditor`, step 5 of `audit-fix`).
 
@@ -196,7 +201,7 @@ file or keep it as a one-line pointer to `AGENTS.md`.
    `echo '{"tool_input":{"file_path":"<a source file>"}}' | sh .claude/hooks/format.sh`;
    `echo '{}' | bash .claude/hooks/antigravity.sh stop` prints `{"decision":"stop"}` on a clean tree;
    `echo '{"tool_input":{"file_path":"<a file not in .tmp/scope>"}}' | bash .claude/hooks/scope-fence.sh pre`
-   prints a deny); the UI
+   prints a deny; `python3 .claude/hooks/test_hooks.py` prints «0 failed»); the UI
    preview (if any) started once and its login page loads.
 4. Cold start: from `AGENTS.md` and its links alone, a new agent can tell the current task, how to
    verify it and what «done» means.

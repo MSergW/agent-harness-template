@@ -3,6 +3,7 @@
 # through Antigravity's pre-command chain (antigravity.sh). Exits non-zero when a case gets the other decision.
 #   bash tests/wait-guards.sh
 set -uo pipefail
+export HOOK_JOURNAL=/dev/null   # the hooks journal their stops (journal.sh); not into this repository
 hooks="$(cd "$(dirname "$0")/.." && pwd)/files/.claude/hooks"
 fails=0; n=0
 check() {   # name want got

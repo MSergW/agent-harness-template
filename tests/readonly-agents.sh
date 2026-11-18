@@ -4,6 +4,7 @@
 # Exits non-zero when a case gets the other decision.
 #   bash tests/readonly-agents.sh
 set -uo pipefail
+export HOOK_JOURNAL=/dev/null   # the hooks journal their stops (journal.sh); not into this repository
 hook="$(cd "$(dirname "$0")/.." && pwd)/files/.claude/hooks/readonly-agents.py"
 command -v python3 >/dev/null || { echo "python3 is not installed — skipped"; exit 0; }
 

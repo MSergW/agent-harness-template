@@ -89,12 +89,49 @@ never regenerate them. Human-facing files stay in the project language; agent-on
   preview names and test accounts still match the project. Every read-only one is in `GUARDED` of
   `.claude/hooks/readonly-agents.py` (a `*-verifier` is matched by name), and the project commands it needs
   (`MAKE_TARGETS`, a validator) pass that hook.
+- `PROJECT_SECRETS` of `.claude/hooks/git-guard.py` and the `Read`/`Edit` denies of `.claude/settings.json` cover
+  every secret file «Do not touch» in `AGENTS.md` names, each with a deny case in `.claude/hooks/test_hooks.py`.
 
-## 7. Skill ablation (one skill per refresh, only with the owner's yes)
+## 7. Skill usage
+
+The `skill-usage.sh` hook (Claude Code only) appends a line per use to `skill-usage.jsonl` in the git common
+directory — the main checkout and every worktree, kept after a worktree is removed: `ts`, `skill`, `by` (`model` —
+a Skill call; `user` — a typed `/name`, in the desktop app followed by a `model` line of the same session), `agent`
+(`main` or the subagent), `session`, `branch`. Codex and Antigravity read skills as files and are not counted.
+Transcripts are no substitute: Claude Code cleans them up, and each worktree has its own.
+
+```bash
+log="$(git rev-parse --path-format=absolute --git-common-dir)/skill-usage.jsonl"
+jq -r --arg since "<date of the previous refresh>" 'select(.ts >= $since) | "\(.skill) \(.by) \(.agent)"' "$log" \
+  | sort | uniq -c | sort -rn
+ls .agents/skills   # a skill missing from the counts was not used in the window
+```
+
+Report to the owner, not a change by itself:
+- Skills unused over the window (explicit-only ones aside): merge, cut or ask whether still needed. The costliest
+  used skill (size × uses) is the next §8 candidate.
+- An explicit-only skill (`disable-model-invocation: true`) with a `model` line and no `user` line of the same
+  session just before it: the flag is not working.
+- A skill the model calls far more often than its task comes up: its description triggers too wide.
+- A model-invoked skill reached mostly by `user` lines: its description triggers too narrow.
+
+### Hook journal
+
+Every stop by a PreToolUse hook (`git-guard`, `prefer-rg`, `background-timeout`, `no-pgrep-wait`, `readonly-agents`)
+is a line in `hook-journal.tsv` next to `skill-usage.jsonl`: time, rule, decision, agent — never the command.
+
+```bash
+cut -f2,3,4 "$(git rev-parse --path-format=absolute --git-common-dir)/hook-journal.tsv" | sort | uniq -c | sort -rn
+```
+
+A rule that fires often is shown to the owner: by the transcripts of those sessions, is it catching real mistakes or
+normal work? A false stop is narrowed with a new «pass» case in `.claude/hooks/test_hooks.py`, never removed.
+
+## 8. Skill ablation (one skill per refresh, only with the owner's yes)
 
 Instructions written for an earlier model can go stale: the current one may do as well, or better, without them.
 
-- Pick the candidate by cost: size × uses (Claude Code: Skill calls in the window's sessions,
+- Pick the candidate by cost: size × uses (§7; before the log existed, Skill calls in the window's sessions,
   `rg -o --no-filename '"name":"Skill","input":\{"skill":"[a-z:-]+' <sessions>/*.jsonl | sort | uniq -c`).
 - Pick a past task the skill served: a finished commit whose original request is recorded (a removed row of
   `ideas.md`, a plan step). Detached worktrees at its parent (`git worktree add --detach <scratch>/with-1 <commit>^`,
@@ -111,7 +148,7 @@ Instructions written for an earlier model can go stale: the current one may do a
   delete it; «with» clearly better → keep it, and record which rules made the difference. One task is a sample of one:
   a cut needs two trials that agree. Results — a row in `docs/decisions.md`. Remove the worktrees afterwards.
 
-## 8. Size, profile and cold start
+## 9. Size, profile and cold start
 
 - Root `AGENTS.md` ≤ ~150 lines and only what every session needs before its first step: a procedure moves into a
   skill, what one module or function does into its map or doc comment, user-facing detail into `docs/`.
@@ -120,7 +157,7 @@ Instructions written for an earlier model can go stale: the current one may do a
 - Cold-start test: from `AGENTS.md` and its links alone, a new agent can tell the current task, how
   to verify it and what «done» means.
 
-## 9. Finish
+## 10. Finish
 
 - `make check` green, also on a fresh clone (`git clone . <tmp>` and run it there).
 - Report to the owner in their language: what drifted and how it was fixed, commands that broke,

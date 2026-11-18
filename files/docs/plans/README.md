@@ -14,8 +14,9 @@ decisions. Small tasks from a conversation need no plan.
 
 ## Before step 1: the plan under attack
 
-A written plan is never judged by the session that wrote it. Before the first step (Claude Code; elsewhere fresh
-sessions given `.claude/agents/plan-critic.md`):
+A written plan is never judged by the session that wrote it. Its idea was attacked before the plan was written (the
+`depth` skill, «Attack the idea before the plan»); before the first step the plan is attacked again (Claude Code;
+elsewhere fresh sessions given `.claude/agents/plan-critic.md`):
 
 - One `plan-critic` per lens in parallel (the lenses in that agent), each given only the plan's path and its lens —
   not the discussion behind the plan. Then one `plan-critic` in judge mode with the plan's path and their reports.
@@ -23,6 +24,8 @@ sessions given `.claude/agents/plan-critic.md`):
   round (a recommended answer each, as in the `depth` skill) and writes the answers into «Decisions». «reject» stays
   out of the plan and the chat.
 - Skipped for a plan of one or two small steps. A plan rewritten in a large part after the attack gets one more.
+- The reports and verdicts are kept in `_DOCS/temp/<topic>/critics-<date>.md` and judged after the plan is done — how,
+  the `plan-steps` skill.
 
 _Why: a model judges its own work badly; several critics attack, a judge keeps what holds._
 

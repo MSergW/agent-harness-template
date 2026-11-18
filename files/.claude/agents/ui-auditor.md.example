@@ -36,8 +36,15 @@ report), then this fixed coverage list — every item gets a verdict per role wh
 - forms: validation messages next to the field, nothing lost on an error, confirmation before irreversible
   actions;
 - visibility: what the UI waits on, retries or holds back is shown with its state and why;
-- accessibility: keyboard only (focus visible, order, Esc closes dialogs), labels on fields and icon buttons,
-  contrast;
+- accessibility: labels on fields and icon buttons; contrast of text 4.5:1, of borders, the focus ring and a
+  selected or hovered state 3:1, in every theme;
+- keyboard and focus, with real key presses (the browser tool's key action: typing or filling a field may skip key
+  events): Tab once through each main page and each open dialog — every control reached in visual order, named, its
+  ring visible and not under a sticky header; opening a dialog, menu or popup puts the focus somewhere on purpose,
+  and closing it each way (Esc, a close button, the main action, a click outside) returns it to the opener; Esc
+  closes only the top layer; a modal dialog keeps Tab inside; tabs and menus are one Tab stop with arrows inside;
+  toggles carry `aria-expanded`. After a busy button, a delete, a closed dialog and a failed save read
+  `document.activeElement` — `<body>` is a finding;
 - narrow screen: the mobile preset on the main pages of each role (reset it afterwards);
 - console: errors in the browser console on any page;
 {{FILL: the project's own UI rules as more items (components to reuse, search fields, dropdowns) — or delete

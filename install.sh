@@ -173,7 +173,7 @@ for pat in '.claude' '.claude/' '.claude/*' '.agents' '.agents/' '.agents/*' '.c
   fi
 done
 ignore=('.claude/settings.local.json' '.claude/.stop-check' '.tmp/')
-[ "$profile" = small ] || ignore+=('_AUDITS/')   # audit reports; the small profile has no audit skill
+[ "$profile" = small ] || ignore+=('_AUDITS/' '_DOCS/temp/')   # audit reports, agent files for the owner (critics files)
 for pat in "${ignore[@]}"; do
   grep -qF "$pat" "$gi" || { printf '%s%s' "$pat" "$eol" >>"$gi"; notes+=(".gitignore: added $pat"); }
 done

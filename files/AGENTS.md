@@ -35,7 +35,9 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 - **Language.** Human-facing text — {{FILL: UI, user docs, messages, …}}, `PROGRESS.md`,
   `docs/plans/`, `docs/decisions.md`, commit messages — is {{FILL: project language}}. Agent-only
   files (this file, module maps, `CLAUDE.md`, `.agents/`, `.claude/`) are English. Answer the owner
-  in the language they write in. Never translate existing UI text.
+  in the language they write in. Never translate existing UI text. Working notes — thinking and the short notes
+  between tool calls that explain nothing to the owner («Reading the plan», «Running the check») — are English;
+  whatever the owner reads to understand or decide (an answer, analysis, plan, question, report) is in their language.
 - **Domain terms — [GLOSSARY.md](GLOSSARY.md)** (in the project language). Code names, UI, docs and
   answers use its terms, never the words under «Avoid». When the owner or the code uses a term against
   it, say so and ask which is meant; a new or changed term goes into the glossary in the same change.
@@ -44,7 +46,9 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 - {{FILL: project rules that came from incidents or the owner's decisions, each ending with
   `_Why: <reason> (<date>, <source>)._` Delete this bullet if there are none yet.}}
 - **One task at a time.** No drive-by refactoring; anything found outside the task goes to
-  `docs/plans/tech-debt.md` or a separate proposal. Before the first edit of a task write the files you
+  `docs/plans/tech-debt.md` or a separate proposal. Every changed line traces to the task: leave comments and code
+  you do not fully understand as they are, remove only what your own change left unused, and name dead code you
+  meet instead of deleting it. Before the first edit of a task write the files you
   intend to change into `.tmp/scope` (one path or glob per line, `dir/` for a directory; the whole repository —
   `*` — only for a task that truly spans it). The scope fence hook refuses an edit outside it and the stop hook
   lists changed files outside it: undo the edit, or add the file to the scope deliberately and say so in the
@@ -54,6 +58,8 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
 
 ## Solution sizing
 
+A request open to more than one reading: name the readings and ask, never pick one silently; an assumption you act
+on is said in the answer. _Why: a silent guess is the costliest misunderstanding — it shows only in the result._
 After reading the code the change touches, stop at the first that holds:
 1. Already in this codebase: reuse it. 2. Standard library or a platform feature: use it.
 3. A dependency already installed: use it. 4. Otherwise: the minimum that meets the task.
@@ -74,8 +80,8 @@ Done means runnable evidence, not confidence:
 
 Before the owner checks a change of code, it gets a review of its diff in a fresh context by
 [REVIEW.md](REVIEW.md) — with `make check` («Context economy»), before layer 3, since its fixes change the
-code. Block findings are fixed and reviewed once more; at most two rounds, then what is still open
-goes to the owner with the change. _Why: the writer does not review its own work — it has seen why
+code. Block findings are fixed and reviewed once more; a third round only when the second is still
+`BLOCK`, then what is still open goes to the owner with the change. _Why: the writer does not review its own work — it has seen why
 every line is right._
 
 Also: update the affected `docs/` page in the same commit when behaviour or labels change.
@@ -115,6 +121,7 @@ instead): run the `handoff` skill. Commit only when asked, and only a feature th
 |---|---|
 | {{FILL: one row per directory a newcomer needs}} | |
 | `scripts/check.sh` | the single verification (`make check`) |
+| `_DOCS/temp/<topic>/` | agent files the owner may need (scripts, instructions, check data, a plan's critics files), a folder per plan or task (not in git; `handoff` asks what stays); the scratchpad — throwaway only |
 | `_AUDITS/` | audit reports `CODE_`/`SECURITY_`/`UI_AUDIT_<date>.md` (not in git; deleted once triaged — the `audit-fix` skill) |
 
 Module maps — **read the map before editing that module**: {{FILL: links to `<module>/AGENTS.md`,

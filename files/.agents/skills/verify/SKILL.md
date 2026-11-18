@@ -25,8 +25,9 @@ known environment caveats (e.g. tests that need network or a sandbox exception).
 Together with `make check` and before layer 3: the review of the diff in a fresh context by
 `REVIEW.md` (Claude Code: the `reviewer` subagent; Gemini in Antigravity: its own subagent given
 `.claude/agents/reviewer.md`, `GEMINI.md`; another tool: a new session given the same inputs) — the task in a few sentences and the paths of the change. Block findings are fixed and go
-back through `make check`, then the second round gets the first round's findings and what was done.
-At most two rounds; what is still open goes to the owner with the change. «Pre-existing» findings
+back through `make check`, then the next round gets the previous round's findings and what was done.
+Two rounds, a third only when the second is still `BLOCK` (`REVIEW.md`, «Rounds»); what is still open goes to the
+owner with the change. «Pre-existing» findings
 go to `docs/plans/tech-debt.md`, not into this change.
 
 ## Layer 3: system

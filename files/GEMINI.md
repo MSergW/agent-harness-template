@@ -22,7 +22,7 @@ break most often: careful work, but checks narrower than the task and reports mo
 - **Review the diff in a fresh context.** Together with `make check`, before reporting a change of code, invoke a
   read-only subagent (Antigravity: `invoke_subagent`, a research type) told to read `REVIEW.md` and
   `.claude/agents/reviewer.md`, given the task in a few sentences and the changed paths. Fix its **block** findings,
-  run a second round on the fixes only (at most two rounds), and re-run `make check` after any code change. The
+  run a second round on the fixes only (a third only when the second is still block), and re-run `make check` after any code change. The
   review's verdict and open notes go into «Verified».
 
 ## Report — four parts, none skipped

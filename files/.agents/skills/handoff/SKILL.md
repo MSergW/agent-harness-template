@@ -23,7 +23,9 @@ The files below are human-facing — write them in the project language (see `AG
    real next actions only — drop what is done, merge checks that wait for the same deploy into one
    item, long-term or blocked items go to tech debt. `make check` turns red above 40 KB.
 3. Active plan in `docs/plans/` — tick steps with evidence (command, commit, where verified).
-   Move a finished plan to `docs/plans/done/`.
+   Move a finished plan to `docs/plans/done/`. Then list its `_DOCS/temp/<topic>/` files, each with a verdict —
+   delete (no later work needs it) or keep (what for, until when) — and ask the owner before deleting. A
+   `critics-*.md` file stays (with its «Outcome» filled — the `plan-steps` skill) until the owner evaluates the attack.
    A step's evidence and an entry in the current state take 2–3 lines: what changed, the commit, what was verified
    and what was not. Details live in the commits; never retell the work.
 4. New owner decisions not visible from code → `docs/decisions.md` with the reason.

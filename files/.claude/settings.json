@@ -20,7 +20,9 @@
       "Bash(git push * --force:*)",
       "Bash(git push * -f:*)",
       "Read(./.env)",
-      "Read(./**/.env)"
+      "Read(./**/.env)",
+      "Edit(./.env)",
+      "Edit(./**/.env)"
     ]
   },
   "hooks": {
@@ -42,6 +44,7 @@
         "matcher": "Bash",
         "hooks": [
           { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/prefer-rg.sh\"", "timeout": 5 },
+          { "type": "command", "command": "python3 \"$CLAUDE_PROJECT_DIR/.claude/hooks/git-guard.py\"", "timeout": 5 },
           { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/background-timeout.sh\"", "timeout": 5 }
         ]
       },
@@ -63,6 +66,19 @@
         "matcher": "Edit|Write|MultiEdit",
         "hooks": [
           { "type": "command", "command": "sh \"$CLAUDE_PROJECT_DIR/.claude/hooks/format.sh\"" }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-usage.sh\"", "timeout": 5 }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          { "type": "command", "command": "bash \"$CLAUDE_PROJECT_DIR/.claude/hooks/skill-usage.sh\"", "timeout": 5 }
         ]
       }
     ],

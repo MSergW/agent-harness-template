@@ -9,7 +9,7 @@ context: it has seen why every line is right.
 - the task in a few sentences — what the owner asked for, what was decided;
 - the paths of the change. The working tree may also hold the owner's own uncommitted work: review
   only the paths you were given (`git diff HEAD -- <paths>`, plus the untracked new files among them);
-- on the second round, the findings of the first and what was done about them.
+- on a later round, the findings of the previous one and what was done about them.
 
 ## Scope
 
@@ -108,6 +108,8 @@ have run and did not is a miss.
 
 ## Rounds
 
-At most two. The second round checks only the fixes and anything they touched; it does not look
-for new classes in code the first round already passed. What is still open after the second round
-goes to the owner with the change — the writer does not start a third.
+Two, and a third only when the second returned `BLOCK`. A later round checks only the fixes of the previous round's
+block findings and anything they touched; it does not look for new classes in code an earlier round already passed.
+What is still open after the third round goes to the owner with the change, named in the report — the writer does not
+start a fourth. A change is never reported done on a `BLOCK` whose fix no round has reviewed. _Why: with two rounds at
+most, a change could end on a second `BLOCK` whose fix nobody reviewed (in a real project, 7 plan steps of 44)._

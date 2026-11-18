@@ -40,7 +40,9 @@ mind: the template's diff shows the template's intent, and the project's file ho
 
 ## 3. Finish
 
-1. Run each changed hook once with sample input, as in `FILL_PROMPT.md` «Acceptance» item 3.
+1. Run each changed hook once with sample input, as in `FILL_PROMPT.md` «Acceptance» item 3, and
+   `python3 .claude/hooks/test_hooks.py` (a project case that now fails: fix the project's own hook list, or
+   its case if the template narrowed the rule on purpose).
 2. Delete `HARNESS_UPDATE.md`, then run the `install.sh --done` command named at the top of it: it
    records the new template commit in `.harness-version` and refuses while the report file still exists.
 3. `make check` must be green: its «unfinished update» step stays red until step 2 is done. Fix what

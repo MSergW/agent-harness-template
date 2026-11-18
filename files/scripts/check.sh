@@ -118,6 +118,17 @@ if [ -f PROGRESS.md ]; then
     "move older current-state entries to docs/progress/<year>-W<week>.md, drop done items from next (the handoff skill)"
 fi
 
+step "harness: hook rules (stop and pass cases)"
+# Each PreToolUse hook rule has commands it must stop and similar ones it must let through. A rule that blocks
+# normal work is narrowed with a new «pass» case in test_hooks.py, never removed.
+if [ -f .claude/hooks/test_hooks.py ]; then
+  if has python3 && has jq; then
+    python3 .claude/hooks/test_hooks.py || fail "hook tests" "fix the hook, or narrow its rule with a new «pass» case in .claude/hooks/test_hooks.py — never remove the rule"
+  else
+    skip "python3 or jq (hook tests)"
+  fi
+fi
+
 step "debug probes left"
 # The diagnose skill tags every temporary log line with [DEBUG-<4 hex>]; none may outlive the diagnosis.
 # The pattern is split so this line does not match itself.

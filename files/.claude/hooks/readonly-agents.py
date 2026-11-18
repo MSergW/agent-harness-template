@@ -27,10 +27,11 @@ Antigravity have no subagents of this kind), so it is not in .codex/hooks.json o
 import json
 import os
 import re
+import subprocess
 import sys
 
 GUARDED = {
-    "reviewer", "log-reader", "docs-sync", "plan-critic", "code-auditor", "security-auditor", "checker",
+    "reviewer", "code-search", "log-reader", "docs-sync", "plan-critic", "code-auditor", "security-auditor", "checker",
     "ui-sweeper", "ui-auditor", "Explore", "Plan",
 }
 PROBERS = {"reviewer", "code-auditor", "security-auditor"}
@@ -544,6 +545,9 @@ def check_command(cmd, ctx, depth=0):
 
 
 def deny(reason, agent):
+    # The journal gets the agent and the rule, never the command (journal.sh).
+    subprocess.run(["bash", os.path.join(os.path.dirname(os.path.abspath(__file__)), "journal.sh"),
+                    "readonly-agents", "deny"], input=json.dumps({"agent_type": agent}), text=True, check=False)
     print(json.dumps({"hookSpecificOutput": {
         "hookEventName": "PreToolUse",
         "permissionDecision": "deny",
