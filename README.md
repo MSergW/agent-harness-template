@@ -123,7 +123,8 @@ steps=en    # a plan's step sessions (their questions and final report — in re
 ```
 
 The session-start hook prints it in Claude Code, Codex and Antigravity; ask the agent «answer in English from now
-on» and it changes the file. Its cases: `bash tests/language.sh`.
+on» and it changes the file. Save it as UTF-8 (a BOM is fine; UTF-16, PowerShell 5.1's `>`, is not read).
+Its cases: `bash tests/language.sh`.
 
 ## Windows
 

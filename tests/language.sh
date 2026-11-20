@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # The owner's language block of files/.claude/hooks/session-start.sh: no file — ask once; ru/uk name the other
-# language they are not; notes and steps default to English; the last line of a key wins, comments are ignored.
+# language they are not; notes and steps default to English; the last line of a key wins, comments are ignored;
+# a UTF-8 BOM is dropped; a UTF-16 file is never to be overwritten.
 #   bash tests/language.sh
 set -uo pipefail
 hook="$(cd "$(dirname "$0")/.." && pwd)/files/.claude/hooks/session-start.sh"
@@ -21,5 +22,9 @@ printf 'reply=uk\r\nnotes=uk\r\nsteps=en\r\n' >"$d/uk"; out=$(run "$d/uk")
 has "uk (CRLF): not Russian" "$out" "in Ukrainian (not Russian);"; has "uk: notes Ukrainian" "$out" "notes in Ukrainian (not Russian)"
 printf 'reply=ru\nreply=en\nsteps=Polish\n' >"$d/en"; out=$(run "$d/en")
 has "last key wins" "$out" "to the owner in English;"; has "a language name passes as is" "$out" "works in Polish"
+printf '\357\273\277reply=uk\r\nnotes=en\r\n' >"$d/bom"; out=$(run "$d/bom")
+has "UTF-8 BOM: reply still read" "$out" "to the owner in Ukrainian (not Russian);"
+printf '\377\376r\000=\000' >"$d/utf16"; out=$(run "$d/utf16")
+has "unreadable file: not overwritten" "$out" "Do not overwrite it"
 echo "$((n - fails))/$n passed"
 [ "$fails" -eq 0 ]

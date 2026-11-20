@@ -30,16 +30,23 @@ lang_name() {   # code → name; ru and uk name each other, since the project te
     *) echo "$1" ;;
   esac
 }
-lang_get() { sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*\([^#[:space:]]*\).*/\1/p" "$langfile" 2>/dev/null | tail -1 | tr -d '\r'; }
+# A UTF-8 BOM (Windows editors, PowerShell 5.1 Set-Content) is dropped, or the first key would never match.
+lang_get() { sed -e "1s/^$(printf '\357\273\277')//" "$langfile" 2>/dev/null |
+  sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*\([^#[:space:]]*\).*/\1/p" | tail -1 | tr -d '\r'; }
+# Git Bash prints /c/Users/…; PowerShell (Antigravity, Codex on Windows) needs C:\Users\….
+langshown="$langfile"; command -v cygpath >/dev/null 2>&1 && langshown="$langfile ($(cygpath -w "$langfile"))"
 echo
 if [ -f "$langfile" ] && [ -n "$(lang_get reply)" ]; then
   reply=$(lang_name "$(lang_get reply)"); notes=$(lang_name "$(lang_get notes)"); steps=$(lang_name "$(lang_get steps)")
-  echo "Language (the owner's settings, $langfile): answers, plans, questions and reports to the owner in $reply;"
+  echo "Language (the owner's settings, $langshown): answers, plans, questions and reports to the owner in $reply;"
   echo "  your thinking and working notes in ${notes:-English}. A plan's step session works in ${steps:-English}, $reply only in"
   echo "  its questions and its final report. Product text stays in the project language (AGENTS.md). When the owner"
   echo "  asks for another language, change that file (keys reply, notes, steps) and follow it from that answer on."
+elif [ -f "$langfile" ] && ! tr -d '\000' < "$langfile" | cmp -s - "$langfile"; then   # NUL bytes: UTF-16
+  echo "Language: $langshown is not UTF-8 (UTF-16?), its lines cannot be read. Answer in the"
+  echo "  language the owner writes in; think in English. Do not overwrite it: tell the owner to save it as UTF-8."
 else
-  echo "Language: no owner settings in $langfile. Answer in the language the owner writes in; think in English."
+  echo "Language: no owner settings in $langshown. Answer in the language the owner writes in; think in English."
   echo "  In your first answer ask once: the language of answers, of thinking and notes, of a plan's step sessions"
   echo "  (ru, uk, en or another); then write the file, lines reply=…, notes=…, steps=… (AGENTS.md «Language»)."
 fi
