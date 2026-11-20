@@ -113,6 +113,18 @@ and every hook rule's stop and pass cases: `bash tests/hooks.sh` (the same `test
 Agent-only files are in English; human-facing files (`PROGRESS.md`, plans, decisions, commit
 messages) are written in your project's language when the template is filled.
 
+**Your language.** Each person sets the language the agent talks to them in, once for all projects, in
+`~/.config/agent-harness/language` (not in git; the agent asks in the first session and writes it):
+
+```
+reply=ru    # answers, plans, questions, reports: ru, uk, en or a language name
+notes=en    # the agent's thinking and working notes
+steps=en    # a plan's step sessions (their questions and final report — in reply)
+```
+
+The session-start hook prints it in Claude Code, Codex and Antigravity; ask the agent «answer in English from now
+on» and it changes the file. Its cases: `bash tests/language.sh`.
+
 ## Windows
 
 Everything runs in Git Bash (installed with Git for Windows); there are no separate `.bat`/`.ps1`

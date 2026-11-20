@@ -20,6 +20,29 @@ if [ -f .claude/hooks/scope-fence.sh ]; then
   printf '%s' "${input:-}" | bash .claude/hooks/scope-fence.sh start
   echo "Scope: before the first edit write the files of your task into .tmp/scope (AGENTS.md, «One task at a time»)."
 fi
+# The owner's language: a personal file outside the repository, one for all projects (AGENTS.md «Language»).
+# key=value lines: reply (answers, plans, questions, reports), notes (thinking, working notes), steps (a plan's
+# step sessions). ru/uk/en or a language name. The agent writes it when the owner asks; none — it asks once.
+langfile="${AGENT_LANGUAGE_FILE:-$HOME/.config/agent-harness/language}"
+lang_name() {   # code → name; ru and uk name each other, since the project text around may be the other one
+  case "$1" in
+    ru) echo "Russian (not Ukrainian)" ;; uk) echo "Ukrainian (not Russian)" ;; en) echo "English" ;;
+    *) echo "$1" ;;
+  esac
+}
+lang_get() { sed -n "s/^[[:space:]]*$1[[:space:]]*=[[:space:]]*\([^#[:space:]]*\).*/\1/p" "$langfile" 2>/dev/null | tail -1 | tr -d '\r'; }
+echo
+if [ -f "$langfile" ] && [ -n "$(lang_get reply)" ]; then
+  reply=$(lang_name "$(lang_get reply)"); notes=$(lang_name "$(lang_get notes)"); steps=$(lang_name "$(lang_get steps)")
+  echo "Language (the owner's settings, $langfile): answers, plans, questions and reports to the owner in $reply;"
+  echo "  your thinking and working notes in ${notes:-English}. A plan's step session works in ${steps:-English}, $reply only in"
+  echo "  its questions and its final report. Product text stays in the project language (AGENTS.md). When the owner"
+  echo "  asks for another language, change that file (keys reply, notes, steps) and follow it from that answer on."
+else
+  echo "Language: no owner settings in $langfile. Answer in the language the owner writes in; think in English."
+  echo "  In your first answer ask once: the language of answers, of thinking and notes, of a plan's step sessions"
+  echo "  (ru, uk, en or another); then write the file, lines reply=…, notes=…, steps=… (AGENTS.md «Language»)."
+fi
 # PROGRESS.md by position, whatever language its headings are in: the first section (current state)
 # up to its first blank line after text, the second (in progress) whole, the top of the third (next);
 # cut at a line boundary under PROGRESS_MAX_BYTES. The rest is read by section, never whole.

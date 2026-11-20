@@ -138,8 +138,8 @@ delete sections that would be empty.
   prints nothing when allowed).
 - Skills: fill `verify` (real layer-3 procedures) and `git-commit` (scope table from the directory
   layout and `git log --format=%s | sort | uniq -c`, real examples), `worktree` (the local files a
-  worktree needs and how it gets them), `plan-steps` (the two language lines of a new session's brief, in the
-  owner's language). Add a project skill only for a recurring task with rules not
+  worktree needs and how it gets them). The owner's language is not filled: it lives in their own
+  `~/.config/agent-harness/language`, asked for in the first session. Add a project skill only for a recurring task with rules not
   obvious from the code; symlink it into `.claude/skills/`.
 - `plan-critic`: its lenses (keep data / ops / users or fit them to the domain) and where real data can be read
   safely.

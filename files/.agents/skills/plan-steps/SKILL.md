@@ -58,13 +58,15 @@ plan is attacked again by «The plan under attack» in `docs/plans/README.md` be
 
 - `prompt` and `background` are English (agent-only text, `AGENTS.md` «Language»); UI labels stay quoted in the
   project language.
-- The first line names the language, word for word. Any session:
-  {{FILL: `Language: answer the owner in <language>; product text (UI, docs, commits) stays <project language>, as AGENTS.md says.`}}
+- The first line names the language, word for word; the languages themselves come from the owner's settings, which
+  the session-start hook prints in every session (`AGENTS.md` «Language»). Any session:
+  `Language: follow the owner's language settings printed at session start; product text (UI, docs, commits) stays in the project language, as AGENTS.md says.`
   A plan's step, as the first line of `background` (the app puts `background` before `prompt`), or of `prompt` when
   there is no background:
-  {{FILL: `Language: you are a plan step session. Work in English: every message, note and your thinking, including the short message that ends a turn while you wait for a check, a review or a subagent. <Owner's language> only in a question to the owner and in the one final report when the step is done (done, verified, not verified).`}}
+  `Language: you are a plan step session. Work in the step-session language of the owner's settings printed at session start: every message, note and your thinking, including the short message that ends a turn while you wait for a check, a review or a subagent. The owner's answer language only in a question to the owner and in the one final report when the step is done (done, verified, not verified).`
   _Why: a session does not see its own title, so the language rule must be the brief's first line; without it steps
-  drifted between languages, and a line placed after the background was ignored._
+  drifted between languages, and a line placed after the background was ignored. «Russian» alone next to Ukrainian
+  project text drifted into Ukrainian, so the hook names the language it is not._
 - A session with its own worktree gets `branch_name` by the `worktree` skill (the app adds a prefix and a suffix).
   A card (`initiation: "own_initiative"`) drops `branch_name` and the app names the branch at random, so a session
   with its own worktree is never proposed as a card: ask in the reply and start it with `user_asked` on the owner's

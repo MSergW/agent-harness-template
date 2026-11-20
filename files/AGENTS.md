@@ -34,10 +34,14 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
   the other side». Delete this bullet only if there is none.}}
 - **Language.** Human-facing text — {{FILL: UI, user docs, messages, …}}, `PROGRESS.md`,
   `docs/plans/`, `docs/decisions.md`, commit messages — is {{FILL: project language}}. Agent-only
-  files (this file, module maps, `CLAUDE.md`, `.agents/`, `.claude/`) are English. Answer the owner
-  in the language they write in. Never translate existing UI text. Working notes — thinking and the short notes
-  between tool calls that explain nothing to the owner («Reading the plan», «Running the check») — are English;
-  whatever the owner reads to understand or decide (an answer, analysis, plan, question, report) is in their language.
+  files (this file, module maps, `CLAUDE.md`, `.agents/`, `.claude/`) are English. Never translate existing UI text.
+  The language of talk is the owner's own, set in a personal file outside the repository
+  (`~/.config/agent-harness/language`: `reply=`, `notes=`, `steps=`; ru, uk, en or a name), printed at session start:
+  whatever the owner reads to understand or decide (an answer, analysis, plan, question, report) is in `reply`;
+  working notes — thinking and the short notes between tool calls that explain nothing to the owner («Reading the
+  plan», «Running the check») — in `notes`. No file: ask once and write it; the owner asks for another language —
+  change the file. Agents without the session-start hook read the file themselves. _Why: owners of one project write
+  different languages, and a rule «the owner's language» next to text in a close one drifted into it._
 - **Domain terms — [GLOSSARY.md](GLOSSARY.md)** (in the project language). Code names, UI, docs and
   answers use its terms, never the words under «Avoid». When the owner or the code uses a term against
   it, say so and ask which is meant; a new or changed term goes into the glossary in the same change.

@@ -37,6 +37,12 @@ mind: the template's diff shows the template's intent, and the project's file ho
   update every reference to the old path. A renamed skill: re-create its `.claude/skills/` link.
 - **Skipped** — the project had deleted these. Leave them out unless the owner asks for them.
 - **Notes** — act on each.
+- **The owner's language.** The template keeps it out of the project, in `~/.config/agent-harness/language`
+  (`AGENTS.md` «Language», printed by `session-start.sh`). If the project's `AGENTS.md`, `CLAUDE.md` or the filled
+  `plan-steps` language lines name the owner's language (the language of answers, notes, step sessions), write
+  those values into that file when it does not exist yet (show the owner what you wrote), then take the template's
+  wording and keep only the project language there. Text one person wants (a vocabulary block, a style) stays in
+  that person's settings or memory, never in the project.
 
 ## 3. Finish
 
