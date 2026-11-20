@@ -58,15 +58,18 @@ plan is attacked again by «The plan under attack» in `docs/plans/README.md` be
 
 - `prompt` and `background` are English (agent-only text, `AGENTS.md` «Language»); UI labels stay quoted in the
   project language.
-- The first line names the language, word for word; the languages themselves come from the owner's settings, which
-  the session-start hook prints in every session (`AGENTS.md` «Language»). Any session:
-  `Language: follow the owner's language settings printed at session start; product text (UI, docs, commits) stays in the project language, as AGENTS.md says.`
+- The first line names the languages **by name**, word for word: the main session fills `<steps>` and `<reply>` from
+  the owner's settings the session-start hook printed to it (`AGENTS.md` «Language»), in the hook's own wording
+  («Russian (not Ukrainian)»). Never a pointer like «the language of the owner's settings». Any session:
+  `Language: answer the owner in <reply>; product text (UI, docs, commits) stays in the project language, as AGENTS.md says.`
   A plan's step, as the first line of `background` (the app puts `background` before `prompt`), or of `prompt` when
   there is no background:
-  `Language: you are a plan step session. Work in the step-session language of the owner's settings printed at session start: every message, note and your thinking, including the short message that ends a turn while you wait for a check, a review or a subagent. The owner's answer language only in a question to the owner and in the one final report when the step is done (done, verified, not verified).`
+  `Language: you are a plan step session. Work in <steps>: every message, note and your thinking, including the short message that ends a turn while you wait for a check, a review or a subagent, and a status line the app asks for («the user hasn't heard from you…»); once one message drifts into another language, the next ones go back. <reply> only in a question to the owner and in the one final report when the step is done (done, verified, not verified).`
   _Why: a session does not see its own title, so the language rule must be the brief's first line; without it steps
   drifted between languages, and a line placed after the background was ignored. «Russian» alone next to Ukrainian
-  project text drifted into Ukrainian, so the hook names the language it is not._
+  project text drifted into Ukrainian, so the hook names the language it is not. A pointer to the settings instead
+  of the names (template, 2026-11-20) let a step session of Art_Telephony_System drift into the owner's language
+  after the app's «say what you're doing» nudge and stay there; ArtCloud_Ops, still on named languages, did not._
 - A session with its own worktree gets `branch_name` by the `worktree` skill (the app adds a prefix and a suffix).
   A card (`initiation: "own_initiative"`) drops `branch_name` and the app names the branch at random, so a session
   with its own worktree is never proposed as a card: ask in the reply and start it with `user_asked` on the owner's

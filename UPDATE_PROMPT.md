@@ -41,7 +41,9 @@ mind: the template's diff shows the template's intent, and the project's file ho
   (`AGENTS.md` «Language», printed by `session-start.sh`). If the project's `AGENTS.md`, `CLAUDE.md` or the filled
   `plan-steps` language lines name the owner's language (the language of answers, notes, step sessions), write
   those values into that file when it does not exist yet (show the owner what you wrote), then take the template's
-  wording and keep only the project language there. Text one person wants (a vocabulary block, a style) stays in
+  wording and keep only the project language there. The `plan-steps` brief lines keep `<steps>` and `<reply>` as
+  placeholders (the main session fills them with names for each brief); never write the owner's languages, or a
+  pointer to the settings, in their place. Text one person wants (a vocabulary block, a style) stays in
   that person's settings or memory, never in the project.
 
 ## 3. Finish

@@ -18,6 +18,7 @@ printf 'reply=\n' >"$d/empty"; out=$(run "$d/empty"); has "empty reply: asks" "$
 printf '# mine\nreply = ru   # answers\n' >"$d/ru"; out=$(run "$d/ru")
 has "ru: not Ukrainian" "$out" "to the owner in Russian (not Ukrainian)"; has "ru: notes default English" "$out" "notes in English"
 has "ru: steps default English" "$out" "step session works in English"
+has "ru: a status line in a step is a note" "$out" "working note there, in English"
 printf 'reply=uk\r\nnotes=uk\r\nsteps=en\r\n' >"$d/uk"; out=$(run "$d/uk")
 has "uk (CRLF): not Russian" "$out" "in Ukrainian (not Russian);"; has "uk: notes Ukrainian" "$out" "notes in Ukrainian (not Russian)"
 printf 'reply=ru\nreply=en\nsteps=Polish\n' >"$d/en"; out=$(run "$d/en")

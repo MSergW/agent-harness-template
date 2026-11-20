@@ -40,7 +40,8 @@ if [ -f "$langfile" ] && [ -n "$(lang_get reply)" ]; then
   reply=$(lang_name "$(lang_get reply)"); notes=$(lang_name "$(lang_get notes)"); steps=$(lang_name "$(lang_get steps)")
   echo "Language (the owner's settings, $langshown): answers, plans, questions and reports to the owner in $reply;"
   echo "  your thinking and working notes in ${notes:-English}. A plan's step session works in ${steps:-English}, $reply only in"
-  echo "  its questions and its final report. Product text stays in the project language (AGENTS.md). When the owner"
+  echo "  its questions and its final report; a status line the app asks for («the user hasn't heard from you…») is a"
+  echo "  working note there, in ${steps:-English}. Product text stays in the project language (AGENTS.md). When the owner"
   echo "  asks for another language, change that file (keys reply, notes, steps) and follow it from that answer on."
 elif [ -f "$langfile" ] && ! tr -d '\000' < "$langfile" | cmp -s - "$langfile"; then   # NUL bytes: UTF-16
   echo "Language: $langshown is not UTF-8 (UTF-16?), its lines cannot be read. Answer in the"
