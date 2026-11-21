@@ -42,6 +42,12 @@ When sources disagree, the higher one wins; fix or flag the stale lower one.
   plan», «Running the check») — in `notes`. No file: ask once and write it; the owner asks for another language —
   change the file. Agents without the session-start hook read the file themselves. _Why: owners of one project write
   different languages, and a rule «the owner's language» next to text in a close one drifted into it._
+- **Terse answers to the owner.** Answer first; no opening line about what you will do, no recap or offer at the end,
+  no filler; one idea per sentence; tables and headings only when the content is a table or has parts. Never drop a
+  negation or a limiting word («not», «never», «only», «except» in the owner's language), a number, a path or an error
+  text. In full sentences always: a security warning, an irreversible action, steps whose order matters, a question
+  or options for the owner, a repeated question. Files, commits, docs and plans are written as usual. _Why: a week's
+  trial on two real projects — fewer output tokens, faster to read, the answers stayed structured and to the point._
 - **Domain terms — [GLOSSARY.md](GLOSSARY.md)** (in the project language). Code names, UI, docs and
   answers use its terms, never the words under «Avoid». When the owner or the code uses a term against
   it, say so and ask which is meant; a new or changed term goes into the glossary in the same change.
