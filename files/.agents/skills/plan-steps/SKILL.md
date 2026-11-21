@@ -18,7 +18,10 @@ chat (`AGENTS.md`, «Context economy»).
 - A sequential step's session opens in the plan's worktree (`cwd` = its path; the `worktree` skill), not a new one.
 - The main session does not relay a step session's intermediate notes (checks running, review back, waiting on the
   owner): the owner follows the step there. It speaks only when the step is committed (verify the hash, offer the
-  next step) or when it must act itself. _Why: the relays distract more than they help._
+  next step) or when it must act itself. Woken by any other turn of a step (a question to the owner, a wait, a
+  review back), it ends its turn with no text at all: not «Step 2 is waiting for your answer», not a status line.
+  _Why: the relays distract more than they help; each line written there marks the main session unread, and the
+  owner had to open it only to clear that mark, while the question already stood in the step's own chat._
 - **Every turn a step session ends wakes the main session** (the app does it), and a wake-up re-reads the whole
   context. Subagents run in the background there, so a step cannot wait for one inside its turn. So the step runs
   `make check` itself through Bash in the foreground with a short output (`make check 2>&1 | tail -30`), not through
@@ -68,8 +71,8 @@ plan is attacked again by «The plan under attack» in `docs/plans/README.md` be
   _Why: a session does not see its own title, so the language rule must be the brief's first line; without it steps
   drifted between languages, and a line placed after the background was ignored. «Russian» alone next to Ukrainian
   project text drifted into Ukrainian, so the hook names the language it is not. A pointer to the settings instead
-  of the names (template, 2026-11-20) let a step session of Art_Telephony_System drift into the owner's language
-  after the app's «say what you're doing» nudge and stay there; ArtCloud_Ops, still on named languages, did not._
+  of the names (template, 2026-11-20) let a step session of one real project drift into the owner's language
+  after the app's «say what you're doing» nudge and stay there; another project, still on named languages, did not._
 - A session with its own worktree gets `branch_name` by the `worktree` skill (the app adds a prefix and a suffix).
   A card (`initiation: "own_initiative"`) drops `branch_name` and the app names the branch at random, so a session
   with its own worktree is never proposed as a card: ask in the reply and start it with `user_asked` on the owner's
@@ -81,6 +84,11 @@ plan is attacked again by «The plan under attack» in `docs/plans/README.md` be
   `model: "sonnet"`, except a step marked `[opus]` in the plan (production, secrets, data migrations, a decision
   still open). The `reviewer` runs on Opus: the cheaper model's weak spots are caught by the stronger one.
 - A step on Sonnet that meets a decision the plan does not settle stops and asks the owner, never guesses.
+- A step asks the owner in its own chat: the full questions go in the reply that ends its turn. It never sends them
+  to the main session with `SendMessage`, and every step brief says so in a line:
+  `Questions to the owner go in full in the reply that ends your turn, in your own chat; never send them to the main session with SendMessage.`
+  _Why: the app tells a session started from another one that it may message its parent when blocked; a step of
+  a real project sent its questions that way, and its own chat showed only «questions sent»._
 - A step whose second review round is still `BLOCK` runs the third (`REVIEW.md`, «Rounds»); a step never reports
   done on a `BLOCK` whose fix no round has reviewed.
 - _Why: measured on a real project (44 steps on Sonnet, 22 on Opus, the same Opus reviewer): a Sonnet step cost

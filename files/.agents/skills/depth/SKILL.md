@@ -37,7 +37,9 @@ judges it badly, so the attack goes to a fresh context, after the code is read (
 attacked blind) and before any step is written (Claude Code: the `plan-critic` agent; elsewhere a fresh session given
 `.claude/agents/plan-critic.md`):
 
-1. Write the idea to `_DOCS/temp/<plan topic>/idea.md`, up to ~20 lines in the project language: the goal, the model
+1. Write the idea to `_DOCS/temp/<plan topic>/idea.md`, up to ~20 lines in the project language, built on the owner's
+   own words (quotes with dates; a word the owner and the code use differently is named as such — «The idea in the
+   owner's words» in `docs/plans/README.md`; the same quotes go into the plan's «Owner's words»): the goal, the model
    (entities, tables, who owns what), the flow from the person's first action to the result, what is reused, what is
    left out. Not the four answers, not your reasoning — the attacker must judge the idea, not be led to your
    conclusion.
